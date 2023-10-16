@@ -20,7 +20,7 @@ public class Comment {
     @JoinColumn
     private Board boardId;
 
-    @Column
+    @JoinColumn
     @ManyToOne
     private Member writer;
 

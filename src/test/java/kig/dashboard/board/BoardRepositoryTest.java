@@ -27,7 +27,7 @@ class BoardRepositoryTest {
 
         Member admin = Member.builder()
                 .role(MemberRole.ADMIN)
-                .email("kangig@gmail.com")
+                .username("kangig@gmail.com")
                 .password("admin")
                 .nickname("관리자")
                 .build();
@@ -49,7 +49,7 @@ class BoardRepositoryTest {
         assertThat(savedBoard.getTitle()).isEqualTo("공지사항");
         assertThat(savedBoard.getWriter()).isEqualTo(admin);
         assertThat(savedBoard.getWriter().getRole()).isEqualTo(MemberRole.ADMIN);
-        assertThat(savedBoard.getWriter().getEmail()).isEqualTo("kangig@gmail.com");
+        assertThat(savedBoard.getWriter().getUsername()).isEqualTo("kangig@gmail.com");
 
     }
 }
