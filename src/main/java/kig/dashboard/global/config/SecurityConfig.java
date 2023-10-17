@@ -1,7 +1,10 @@
 package kig.dashboard.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kig.dashboard.global.login.JsonUsernamePasswordAuthenticationFilter;
+import kig.dashboard.global.login.filter.JsonUsernamePasswordAuthenticationFilter;
+import kig.dashboard.global.login.handler.LoginFailureHandler;
+import kig.dashboard.global.login.handler.LoginSuccessJWTProvideHandler;
+import kig.dashboard.member.login.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +13,6 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,6 +22,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final LoginService loginService;
     private final ObjectMapper objectMapper;
 
     @Bean
@@ -29,7 +31,7 @@ public class SecurityConfig {
         http
                 .formLogin().disable()
                 .httpBasic().disable()
-//                .csrf().disable()
+                .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
@@ -50,9 +52,22 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-
+        provider.setUserDetailsService(loginService);
         return new ProviderManager(provider);
     }
+
+
+    @Bean
+    public LoginSuccessJWTProvideHandler loginSuccessJWTProviderHandler() {
+        return new LoginSuccessJWTProvideHandler();
+    }
+
+    @Bean
+    public LoginFailureHandler loginFailureHandler() {
+        return new LoginFailureHandler();
+    }
+
+
 
     @Bean
     public JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter() {
@@ -60,7 +75,8 @@ public class SecurityConfig {
                 = new JsonUsernamePasswordAuthenticationFilter(objectMapper);
 
         jsonUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
-
+        jsonUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessJWTProviderHandler());
+        jsonUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler());
         return jsonUsernamePasswordAuthenticationFilter;
     }
 

@@ -1,40 +1,119 @@
 package kig.dashboard.comment;
 
-import kig.dashboard.board.Board;
+import kig.dashboard.post.Post;
+import kig.dashboard.global.config.BaseTimeEntity;
 import kig.dashboard.member.entity.Member;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-@Entity @Table(name = "comments")
-@NoArgsConstructor
-public class Comment {
+@Entity
+@Table(name = "comments")
+@NoArgsConstructor(access = AccessLevel.PROTECTED) @Getter
+public class Comment extends BaseTimeEntity {
 
     @Id
+    @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long commentId;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn
-    private Board boardId;
-
-    @JoinColumn
-    @ManyToOne
+    @JoinColumn(name = "writer_id")
     private Member writer;
 
-    @Column
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @Lob
+    @Column(nullable = false)
     private String content;
 
-    @Column
-    private LocalDateTime createdAt;
+    private boolean isRemoved;
+
+    // 부모 댓글을 삭제해도 자식 댓글은 남아 있음 //
+    @OneToMany(mappedBy = "parent")
+    private List<Comment> childList = new ArrayList<>();
+
+    /**
+     * 연관관계 편의 메서드
+     */
+
+    public void confirmWriter(Member writer) {
+        this.writer = writer;
+        writer.addComment(this);
+    }
+
+    public void PostBoard(Post post) {
+        this.post = post;
+        post.addComment(this);
+    }
+
+    public void confirmParent(Comment parent) {
+        this.parent = parent;
+        parent.addChild(this);
+    }
+
+    public void addChild(Comment child) {
+        childList.add(child);
+    }
+
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+    public void remove() {
+        this.isRemoved = true;
+    }
 
     @Builder
-    public Comment(Board boardId, Member writer, String content, LocalDateTime createdAt) {
-        this.boardId = boardId;
+    public Comment(Member writer, Post post, Comment parent, String content) {
         this.writer = writer;
+        this.post = post;
+        this.parent = parent;
         this.content = content;
-        this.createdAt = createdAt;
+    }
+
+    public List<Comment> findRemovableList() {
+
+        List<Comment> result = new ArrayList<>();
+
+        Optional.ofNullable(this.parent).ifPresentOrElse(
+
+                parentComment -> {
+                    if(parentComment.isRemoved && parentComment.isAllChildRemoved()) {
+                        result.addAll(parentComment.getChildList());
+                        result.add(parentComment);
+                    }
+                },
+
+                () -> {
+                    if(isAllChildRemoved()) {
+                        result.add(this);
+                        result.addAll(this.getChildList());
+                    }
+                }
+        );
+
+        return result;
+    }
+
+    private boolean isAllChildRemoved() {
+
+        return getChildList().stream()
+                .map(Comment::isRemoved)
+                .filter(isRemoved -> !isRemoved)
+                .findAny().orElse(true);
     }
 }

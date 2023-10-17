@@ -1,4 +1,4 @@
-package kig.dashboard.board;
+package kig.dashboard.post;
 
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.entity.Member;
@@ -8,16 +8,14 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.LocalDateTime;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class BoardRepositoryTest {
+class PostRepositoryTest {
 
     @Autowired
-    BoardRepository boardRepository;
+    PostRepository postRepository;
 
     @Autowired
     MemberRepository memberRepository;
@@ -35,21 +33,20 @@ class BoardRepositoryTest {
         Member savedAdmin = memberRepository.save(admin);
         assertThat(admin).isEqualTo(savedAdmin);
 
-        Board board = Board.builder()
+        Post post = Post.builder()
                 .writer(admin)
                 .title("공지사항")
                 .content("첫번째 게시글입니다.")
-                .createdAt(LocalDateTime.now())
                 .build();
 
-        assertThat(board).isNotNull();
+        assertThat(post).isNotNull();
 
-        Board savedBoard = boardRepository.save(board);
+        Post savedPost = postRepository.save(post);
 
-        assertThat(savedBoard.getTitle()).isEqualTo("공지사항");
-        assertThat(savedBoard.getWriter()).isEqualTo(admin);
-        assertThat(savedBoard.getWriter().getRole()).isEqualTo(MemberRole.ADMIN);
-        assertThat(savedBoard.getWriter().getUsername()).isEqualTo("kangig@gmail.com");
+        assertThat(savedPost.getTitle()).isEqualTo("공지사항");
+        assertThat(savedPost.getWriter()).isEqualTo(admin);
+        assertThat(savedPost.getWriter().getRole()).isEqualTo(MemberRole.ADMIN);
+        assertThat(savedPost.getWriter().getUsername()).isEqualTo("kangig@gmail.com");
 
     }
 }

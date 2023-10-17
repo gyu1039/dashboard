@@ -1,4 +1,4 @@
-package kig.dashboard.member.entity;
+package kig.dashboard.global.config;
 
 
 import lombok.Getter;
@@ -21,7 +21,7 @@ public abstract class BaseTimeEntity {
     private LocalDateTime createdDate;
 
     @LastModifiedDate
-    @Column(updatable = true)
+    @Column
     private LocalDateTime lastModifiedDate;
 
 

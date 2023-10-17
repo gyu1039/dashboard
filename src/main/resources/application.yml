@@ -1,0 +1,28 @@
+spring:
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: create
+
+
+  profiles:
+    include: jwt
+
+
+
+logging:
+  level:
+    org:
+
+      hibernate:
+        SQL: debug
+
+    board example:
+      board: info
+
+file:
+  dir: C:\Users\Administrator\Desktop\tmp\
+

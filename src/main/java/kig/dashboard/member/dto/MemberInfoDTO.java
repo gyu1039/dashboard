@@ -7,12 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder @AllArgsConstructor
+@NoArgsConstructor
 public class MemberInfoDTO {
 
-    private final String username;
-    private final String nickname;
+    private String username;
+    private String nickname;
 
+    @Builder
     public MemberInfoDTO(Member member) {
         this.username = member.getUsername();
         this.nickname = member.getNickname();

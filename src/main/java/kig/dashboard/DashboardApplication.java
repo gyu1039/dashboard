@@ -1,6 +1,6 @@
 package kig.dashboard;
 
-import kig.dashboard.board.BoardRepository;
+import kig.dashboard.post.PostRepository;
 import kig.dashboard.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -21,7 +21,7 @@ public class DashboardApplication{
     private MemberRepository employeeRepository;
 
     @Autowired
-    private BoardRepository boardRepository;
+    private PostRepository postRepository;
 
     @Bean
     public CommandLineRunner testData() {

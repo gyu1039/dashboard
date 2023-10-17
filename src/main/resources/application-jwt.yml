@@ -1,0 +1,11 @@
+jwt:
+  secret: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImFhZG1pbiI6ImZhbHNlIiwibmFtZSI6IkluZ3l1IEthbmciLCJpYXQiOiIxMTg5MDMyMTIyMzEifQ.mpZ7bvxNr-4urUL6eWdVBPolYqO588bau-fgqlIJnJ8
+
+  access:
+    expiration: 80
+    header: authorization
+
+
+  refresh:
+    expiration: 90
+    header: Authorization-refresh
