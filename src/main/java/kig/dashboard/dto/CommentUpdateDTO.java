@@ -1,18 +1,16 @@
-package kig.dashboard.member.dto;
+package kig.dashboard.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import java.util.Optional;
 
 @Data
 @Builder
 @AllArgsConstructor @NoArgsConstructor
-public class MemberUpdateDTO {
+public class CommentUpdateDTO {
 
-    @NotBlank
-    private String nickname;
-
+    Optional<String> content;
 }

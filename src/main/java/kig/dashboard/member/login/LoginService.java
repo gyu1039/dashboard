@@ -2,7 +2,6 @@ package kig.dashboard.member.login;
 
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.entity.Member;
-import kig.dashboard.member.entity.MemberRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

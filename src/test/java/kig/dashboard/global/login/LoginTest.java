@@ -102,7 +102,7 @@ public class LoginTest {
 
         perform(LOGIN_URL, MediaType.APPLICATION_JSON, map)
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andReturn();
     }
 
@@ -112,7 +112,7 @@ public class LoginTest {
 
         perform(LOGIN_URL, MediaType.APPLICATION_JSON, map)
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andReturn();
     }
 
@@ -131,7 +131,7 @@ public class LoginTest {
 
         perform(LOGIN_URL, MediaType.MULTIPART_FORM_DATA, map)
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andReturn();
 
     }

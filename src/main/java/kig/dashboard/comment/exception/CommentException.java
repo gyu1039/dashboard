@@ -1,13 +1,13 @@
-package kig.dashboard.post.exception;
+package kig.dashboard.comment.exception;
 
 import kig.dashboard.global.exception.BaseException;
 import kig.dashboard.global.exception.BaseExceptionType;
 
-public class PostException extends BaseException {
+public class CommentException extends BaseException {
 
     private BaseExceptionType baseExceptionType;
 
-    public PostException(BaseExceptionType baseExceptionType) {
+    public CommentException(BaseExceptionType baseExceptionType) {
         this.baseExceptionType = baseExceptionType;
     }
 

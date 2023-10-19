@@ -1,18 +1,18 @@
-package kig.dashboard.global.file.exception;
+package kig.dashboard.member.exception;
 
 import kig.dashboard.global.exception.BaseException;
 import kig.dashboard.global.exception.BaseExceptionType;
 
-public class FileException extends BaseException {
+public class MemberException extends BaseException {
 
     private BaseExceptionType exceptionType;
 
-    public FileException(BaseExceptionType exceptionType) {
+    public MemberException(BaseExceptionType exceptionType) {
         this.exceptionType = exceptionType;
     }
 
     @Override
     public BaseExceptionType getExceptionType() {
-        return null;
+        return exceptionType;
     }
 }

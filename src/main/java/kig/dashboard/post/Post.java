@@ -3,6 +3,7 @@ package kig.dashboard.post;
 import kig.dashboard.comment.Comment;
 import kig.dashboard.global.config.BaseTimeEntity;
 import kig.dashboard.member.entity.Member;
+import kig.dashboard.member.entity.MemberRole;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BaseTimeEntity {
 
-    @Id
+    @Id @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -33,7 +34,7 @@ public class Post extends BaseTimeEntity {
     private String filePath;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "writer_id")
     private Member writer;
 
     @Builder
@@ -45,7 +46,6 @@ public class Post extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
-
 
 
     /**

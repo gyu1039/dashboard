@@ -5,7 +5,8 @@ import kig.dashboard.member.dto.MemberSignUpDTO;
 import kig.dashboard.member.dto.MemberUpdateDTO;
 import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.entity.MemberRole;
-import org.aspectj.lang.reflect.MemberSignature;
+import kig.dashboard.member.exception.MemberException;
+import kig.dashboard.member.exception.MemberExceptionType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,9 +74,7 @@ class MemberServiceTest {
 
         memberService.signUp(dto);
 
-        Optional<Member> byEmail = memberRepository.findByUsername(EMAIL);
-
-        Member member = byEmail.orElse(null);
+        Member member = memberRepository.findByUsername(EMAIL).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER));
 
         assertThat(member).isNotNull();
         assertThat(member.getUsername()).isEqualTo(EMAIL);
@@ -99,9 +98,10 @@ class MemberServiceTest {
                 .nickname("another")
                 .build();
 
-        assertThatThrownBy(() -> {
-            memberService.signUp(dto2);
-        });
+        assertThat(assertThrows(MemberException.class,
+                () -> memberService.signUp(dto2)).getExceptionType())
+                .isEqualTo(MemberExceptionType.ALREADY_EXIST_USERNAME);
+
     }
 
     @Test
@@ -156,11 +156,11 @@ class MemberServiceTest {
 
         MemberSignUpDTO memberSignUpDTO = setMember();
 
-        String updateName = "변경할래용";
-        memberService.update(new MemberUpdateDTO(Optional.of(updateName)));
+        String updateNickname = "변경할래용";
+        memberService.update(new MemberUpdateDTO(updateNickname));
 
         memberRepository.findByUsername(memberSignUpDTO.getUsername()).ifPresent((member -> {
-            assertThat(member.getNickname()).isEqualTo(updateName);
+            assertThat(member.getNickname()).isEqualTo(updateNickname);
         }));
 
     }
@@ -184,14 +184,15 @@ class MemberServiceTest {
 
         MemberSignUpDTO memberSignUpDTO = setMember();
 
-        assertThat(assertThrows(Exception.class, () -> memberService.withdraw("123")).getMessage()).isEqualTo("비밀번호가 일치하지 않습니다");
+        assertThat(assertThrows(MemberException.class, () -> memberService.withdraw("123")).getExceptionType())
+                .isEqualTo(MemberExceptionType.WRONG_PASSWORD);
     }
 
     @Test
     public void 내정보조회() throws Exception {
 
         MemberSignUpDTO memberSignUpDTO = setMember();
-        MemberInfoDTO info = memberService.getInfo();
+        MemberInfoDTO info = memberService.getMyInfo();
 
         assertThat(info.getUsername()).isEqualTo(memberSignUpDTO.getUsername());
     }

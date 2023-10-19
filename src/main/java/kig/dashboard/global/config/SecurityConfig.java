@@ -1,9 +1,12 @@
 package kig.dashboard.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kig.dashboard.global.jwt.service.JwtService;
 import kig.dashboard.global.login.filter.JsonUsernamePasswordAuthenticationFilter;
+import kig.dashboard.global.login.filter.JwtAuthenticationProcessingFilter;
 import kig.dashboard.global.login.handler.LoginFailureHandler;
 import kig.dashboard.global.login.handler.LoginSuccessJWTProvideHandler;
+import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.login.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +27,8 @@ public class SecurityConfig {
 
     private final LoginService loginService;
     private final ObjectMapper objectMapper;
+    private final MemberRepository memberRepository;
+    private final JwtService jwtService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -35,10 +40,11 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/login", "/signUp", "/").permitAll()
+                    .antMatchers("/login", "/signup", "/").permitAll()
                     .anyRequest().authenticated();
 
-        http.addFilterAfter(jsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
+        http.addFilterAfter(jsonUsernamePasswordLoginFilter(), LogoutFilter.class);
+        http.addFilterAfter(jwtAuthenticationProcessingFilter(), JsonUsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -59,7 +65,7 @@ public class SecurityConfig {
 
     @Bean
     public LoginSuccessJWTProvideHandler loginSuccessJWTProviderHandler() {
-        return new LoginSuccessJWTProvideHandler();
+        return new LoginSuccessJWTProvideHandler(jwtService, memberRepository);
     }
 
     @Bean
@@ -67,10 +73,8 @@ public class SecurityConfig {
         return new LoginFailureHandler();
     }
 
-
-
     @Bean
-    public JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter() {
+    public JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordLoginFilter() {
         JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter
                 = new JsonUsernamePasswordAuthenticationFilter(objectMapper);
 
@@ -78,6 +82,11 @@ public class SecurityConfig {
         jsonUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(loginSuccessJWTProviderHandler());
         jsonUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(loginFailureHandler());
         return jsonUsernamePasswordAuthenticationFilter;
+    }
+
+    @Bean
+    public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
+        return new JwtAuthenticationProcessingFilter(jwtService, memberRepository);
     }
 
 

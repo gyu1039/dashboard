@@ -4,8 +4,11 @@ import kig.dashboard.member.dto.MemberInfoDTO;
 import kig.dashboard.member.dto.MemberSignUpDTO;
 import kig.dashboard.member.dto.MemberUpdateDTO;
 import kig.dashboard.member.entity.Member;
+import kig.dashboard.member.exception.MemberException;
+import kig.dashboard.member.exception.MemberExceptionType;
 import kig.dashboard.member.login.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,7 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -26,7 +30,7 @@ public class MemberService {
         member.encodePassword(passwordEncoder);
 
         if (memberRepository.findByUsername(memberSignUpDTO.getUsername()).isPresent()) {
-            throw new Exception("이미 존재하는 아이디입니다.");
+            throw new MemberException(MemberExceptionType.ALREADY_EXIST_USERNAME);
         }
 
         memberRepository.save(member);
@@ -35,7 +39,7 @@ public class MemberService {
     public void update(MemberUpdateDTO memberUpdateDTO) throws Exception {
 
         Member member = isMemberExists();
-        memberUpdateDTO.getNickname().ifPresent(member::updateNickName);
+        member.updateNickName(memberUpdateDTO.getNickname());
     }
 
 
@@ -45,7 +49,7 @@ public class MemberService {
         Member member = isMemberExists();
 
         if (!member.matchPassword(passwordEncoder, checkPassword)) {
-            throw new Exception("비밀번호가 일치하지 않습니다.");
+            throw new MemberException(MemberExceptionType.WRONG_PASSWORD);
         }
 
         member.updatePassword(passwordEncoder, toBePassword);
@@ -56,7 +60,7 @@ public class MemberService {
         Member member = isMemberExists();
 
         if(!member.matchPassword(passwordEncoder, checkPassword)) {
-            throw new Exception("비밀번호가 일치하지 않습니다");
+            throw new MemberException(MemberExceptionType.WRONG_PASSWORD);
         }
 
         memberRepository.delete(member);
@@ -66,10 +70,10 @@ public class MemberService {
     private Member isMemberExists() throws Exception {
         return memberRepository
                 .findByUsername(SecurityUtil.getLoginUsername())
-                .orElseThrow(() -> new Exception("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER));
     }
 
-    public MemberInfoDTO getInfo() throws Exception {
+    public MemberInfoDTO getMyInfo() throws Exception {
         Member findMember = isMemberExists();
         return new MemberInfoDTO(findMember);
     }
