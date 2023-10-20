@@ -27,7 +27,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final FileService fileService;
 
-    public void save(PostSaveDTO postSaveDTO) throws Exception {
+    public void save(PostSaveDTO postSaveDTO) throws MemberException {
 
         Post post = postSaveDTO.toEntity();
 
@@ -86,7 +86,8 @@ public class PostService {
     }
 
     public PostInfoDTO getPostInfo(Long id) {
-        return null;
+
+        return new PostInfoDTO(postRepository.findWithWriterById(id).orElseThrow(() -> new PostException(PostExceptionType.POST_NOT_FOUND)));
     }
 
     public PostPagingDTO postPagingDTO(Pageable pageable, PostSearchCondition postSearchCondition) {

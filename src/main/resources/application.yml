@@ -1,6 +1,10 @@
 spring:
 
-#  datasource:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/dashboard
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: ingyu
+    password: kang
 
   data:
     web:

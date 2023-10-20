@@ -2,8 +2,8 @@ package kig.dashboard.comment;
 
 import kig.dashboard.comment.exception.CommentException;
 import kig.dashboard.comment.exception.CommentExceptionType;
-import kig.dashboard.dto.CommentSaveDTO;
-import kig.dashboard.dto.CommentUpdateDTO;
+import kig.dashboard.comment.dto.CommentSaveDTO;
+import kig.dashboard.comment.dto.CommentUpdateDTO;
 import kig.dashboard.global.exception.BaseExceptionType;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.MemberService;
@@ -17,10 +17,8 @@ import kig.dashboard.post.PostRepository;
 import kig.dashboard.post.dto.PostSaveDTO;
 import kig.dashboard.post.exception.PostException;
 import kig.dashboard.post.exception.PostExceptionType;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,15 +28,12 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.LongStream;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

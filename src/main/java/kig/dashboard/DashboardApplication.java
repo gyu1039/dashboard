@@ -17,17 +17,4 @@ public class DashboardApplication{
         SpringApplication.run(DashboardApplication.class, args);
     }
 
-    @Autowired
-    private MemberRepository employeeRepository;
-
-    @Autowired
-    private PostRepository postRepository;
-
-    @Bean
-    public CommandLineRunner testData() {
-
-        return args -> {
-
-        };
-    }
 }

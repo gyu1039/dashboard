@@ -1,4 +1,4 @@
-package kig.dashboard.dto;
+package kig.dashboard.comment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

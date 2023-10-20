@@ -2,8 +2,8 @@ package kig.dashboard.comment;
 
 import kig.dashboard.comment.exception.CommentException;
 import kig.dashboard.comment.exception.CommentExceptionType;
-import kig.dashboard.dto.CommentSaveDTO;
-import kig.dashboard.dto.CommentUpdateDTO;
+import kig.dashboard.comment.dto.CommentSaveDTO;
+import kig.dashboard.comment.dto.CommentUpdateDTO;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.exception.MemberException;
 import kig.dashboard.member.exception.MemberExceptionType;
@@ -46,15 +46,6 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    /*@Transactional(readOnly = true)
-    public Comment findById(Long id) throws Exception {
-        return commentRepository.findById(id).orElseThrow(() -> new Exception("댓글이 없습니다."));
-    }
-
-    @Transactional(readOnly = true)
-    public List<Comment> findAll() {
-        return commentRepository.findAll();
-    }*/
 
     public void update(Long id, CommentUpdateDTO commentUpdateDTO) {
 

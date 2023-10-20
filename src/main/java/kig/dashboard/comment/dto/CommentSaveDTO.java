@@ -1,4 +1,4 @@
-package kig.dashboard.dto;
+package kig.dashboard.comment.dto;
 
 import kig.dashboard.comment.Comment;
 import kig.dashboard.member.entity.Member;
