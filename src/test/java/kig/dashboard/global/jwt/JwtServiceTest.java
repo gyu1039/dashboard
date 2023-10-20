@@ -1,14 +1,14 @@
-package kig.dashboard.global.jwt.service;
+package kig.dashboard.global.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import kig.dashboard.global.config.jwt.JwtService;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.entity.MemberRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.exceptions.ExceptionIncludingMockitoWarnings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;

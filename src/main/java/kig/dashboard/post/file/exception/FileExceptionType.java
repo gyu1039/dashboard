@@ -1,4 +1,4 @@
-package kig.dashboard.global.file.exception;
+package kig.dashboard.post.file.exception;
 
 import kig.dashboard.global.exception.BaseExceptionType;
 import org.springframework.http.HttpStatus;

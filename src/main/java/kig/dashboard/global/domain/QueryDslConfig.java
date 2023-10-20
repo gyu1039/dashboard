@@ -1,4 +1,4 @@
-package kig.dashboard.global.config;
+package kig.dashboard.global.domain;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;

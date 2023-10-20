@@ -1,11 +1,11 @@
 package kig.dashboard.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kig.dashboard.global.jwt.service.JwtService;
-import kig.dashboard.global.login.filter.JsonUsernamePasswordAuthenticationFilter;
-import kig.dashboard.global.login.filter.JwtAuthenticationProcessingFilter;
-import kig.dashboard.global.login.handler.LoginFailureHandler;
-import kig.dashboard.global.login.handler.LoginSuccessJWTProvideHandler;
+import kig.dashboard.global.config.jwt.JwtService;
+import kig.dashboard.global.config.login.filter.JsonUsernamePasswordAuthenticationFilter;
+import kig.dashboard.global.config.login.filter.JwtAuthenticationProcessingFilter;
+import kig.dashboard.global.config.login.handler.LoginFailureHandler;
+import kig.dashboard.global.config.login.handler.LoginSuccessJWTProvideHandler;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.login.LoginService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -29,6 +30,7 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final MemberRepository memberRepository;
     private final JwtService jwtService;
+    private final CorsFilter corsFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,9 +41,13 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .addFilter(corsFilter)
                 .authorizeRequests()
-                    .antMatchers("/login", "/signup", "/").permitAll()
-                    .anyRequest().authenticated();
+                .antMatchers("/login", "/signup", "/").permitAll()
+//                .antMatchers("/todo1").hasRole("ROLE_TEAM1")
+//                .antMatchers("/todo2").hasRole("ROLE_TEAM2")
+//                .antMatchers("/todo3").hasRole("ROLE_TEAM3")
+                .anyRequest().authenticated();
 
         http.addFilterAfter(jsonUsernamePasswordLoginFilter(), LogoutFilter.class);
         http.addFilterAfter(jwtAuthenticationProcessingFilter(), JsonUsernamePasswordAuthenticationFilter.class);

@@ -1,10 +1,9 @@
-package kig.dashboard.global.login.filter;
+package kig.dashboard.global.config.login.filter;
 
-import kig.dashboard.global.jwt.service.JwtService;
+import kig.dashboard.global.config.jwt.JwtService;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.startup.CredentialHandlerRuleSet;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;

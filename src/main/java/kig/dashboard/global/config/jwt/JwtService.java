@@ -1,4 +1,4 @@
-package kig.dashboard.global.jwt.service;
+package kig.dashboard.global.config.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -48,7 +48,6 @@ public class JwtService {
     private static final String BEARER = "Bearer ";
 
     private final MemberRepository memberRepository;
-    private final ObjectMapper objectMapper;
 
     public String createdAccessToken(String username) {
         return JWT.create()

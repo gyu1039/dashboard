@@ -1,4 +1,4 @@
-package kig.dashboard.global.login.filter;
+package kig.dashboard.global.config.login.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationServiceException;

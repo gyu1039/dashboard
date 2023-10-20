@@ -1,7 +1,7 @@
 package kig.dashboard.comment;
 
 import kig.dashboard.post.Post;
-import kig.dashboard.global.config.BaseTimeEntity;
+import kig.dashboard.global.domain.BaseTimeEntity;
 import kig.dashboard.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;

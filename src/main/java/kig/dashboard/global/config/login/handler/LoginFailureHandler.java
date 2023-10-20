@@ -1,4 +1,4 @@
-package kig.dashboard.global.login.handler;
+package kig.dashboard.global.config.login.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;

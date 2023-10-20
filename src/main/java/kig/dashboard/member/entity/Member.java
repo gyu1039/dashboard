@@ -2,7 +2,7 @@ package kig.dashboard.member.entity;
 
 import kig.dashboard.post.Post;
 import kig.dashboard.comment.Comment;
-import kig.dashboard.global.config.BaseTimeEntity;
+import kig.dashboard.global.domain.BaseTimeEntity;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

@@ -5,12 +5,14 @@ import kig.dashboard.comment.dto.CommentInfoDTO;
 import kig.dashboard.member.dto.MemberInfoDTO;
 import kig.dashboard.post.Post;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 public class PostInfoDTO {
 
     private Long postId;

@@ -1,6 +1,6 @@
 package kig.dashboard.post;
 
-import kig.dashboard.global.file.service.FileService;
+import kig.dashboard.post.file.service.FileService;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.exception.MemberException;
 import kig.dashboard.member.exception.MemberExceptionType;
@@ -13,14 +13,17 @@ import kig.dashboard.post.dto.PostUpdateDTO;
 import kig.dashboard.post.exception.PostException;
 import kig.dashboard.post.exception.PostExceptionType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
+
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;
@@ -86,11 +89,10 @@ public class PostService {
     }
 
     public PostInfoDTO getPostInfo(Long id) {
-
-        return new PostInfoDTO(postRepository.findWithWriterById(id).orElseThrow(() -> new PostException(PostExceptionType.POST_NOT_FOUND)));
+        return new PostInfoDTO(postRepository.findById(id).orElseThrow(() -> new PostException(PostExceptionType.POST_NOT_FOUND)));
     }
 
-    public PostPagingDTO postPagingDTO(Pageable pageable, PostSearchCondition postSearchCondition) {
-        return null;
+    public PostPagingDTO getPostList(Pageable pageable, PostSearchCondition postSearchCondition) {
+        return new PostPagingDTO(postRepository.search(postSearchCondition, pageable));
     }
 }

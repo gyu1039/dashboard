@@ -1,6 +1,6 @@
-package kig.dashboard.global.login.handler;
+package kig.dashboard.global.config.login.handler;
 
-import kig.dashboard.global.jwt.service.JwtService;
+import kig.dashboard.global.config.jwt.JwtService;
 import kig.dashboard.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

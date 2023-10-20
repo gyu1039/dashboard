@@ -3,7 +3,7 @@ package kig.dashboard.global.login.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kig.dashboard.global.jwt.service.JwtService;
+import kig.dashboard.global.config.jwt.JwtService;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.entity.MemberRole;

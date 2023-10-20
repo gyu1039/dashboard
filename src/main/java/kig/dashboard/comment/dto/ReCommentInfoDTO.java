@@ -2,7 +2,9 @@ package kig.dashboard.comment.dto;
 
 import kig.dashboard.comment.Comment;
 import kig.dashboard.member.dto.MemberInfoDTO;
+import lombok.Data;
 
+@Data
 public class ReCommentInfoDTO {
 
     private final static String DEFAULT_DELETED_MESSAGE = "삭제된 댓글입니다";

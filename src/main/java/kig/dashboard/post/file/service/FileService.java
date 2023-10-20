@@ -1,12 +1,11 @@
-package kig.dashboard.global.file.service;
+package kig.dashboard.post.file.service;
 
-import kig.dashboard.global.file.exception.FileException;
-import kig.dashboard.global.file.exception.FileExceptionType;
+import kig.dashboard.post.file.exception.FileException;
+import kig.dashboard.post.file.exception.FileExceptionType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.processing.FilerException;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;

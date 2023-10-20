@@ -1,9 +1,8 @@
 package kig.dashboard.post;
 
 import kig.dashboard.comment.Comment;
-import kig.dashboard.global.config.BaseTimeEntity;
+import kig.dashboard.global.domain.BaseTimeEntity;
 import kig.dashboard.member.entity.Member;
-import kig.dashboard.member.entity.MemberRole;
 import lombok.*;
 
 import javax.persistence.*;

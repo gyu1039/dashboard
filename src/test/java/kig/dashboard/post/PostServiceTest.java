@@ -1,5 +1,6 @@
 package kig.dashboard.post;
 
+import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.MemberService;
 import kig.dashboard.member.dto.MemberSignUpDTO;
 import kig.dashboard.member.entity.MemberRole;
@@ -42,6 +43,9 @@ class PostServiceTest {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    MemberRepository memberRepository;
 
     private static final String USERNAME = "username";
     private static final String PASSWORD = "PASSWORD";
@@ -290,5 +294,11 @@ class PostServiceTest {
 
         Post findPost = em.createQuery("select p from Post p ", Post.class).getSingleResult();
         assertThrows(PostException.class, () -> postService.delete(findPost.getId()));
+    }
+
+    @Test
+    public void 게시글_검색_조건없음() {
+
+
     }
 }

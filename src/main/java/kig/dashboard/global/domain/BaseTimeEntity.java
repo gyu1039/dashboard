@@ -1,4 +1,4 @@
-package kig.dashboard.global.config;
+package kig.dashboard.global.domain;
 
 
 import lombok.Getter;
