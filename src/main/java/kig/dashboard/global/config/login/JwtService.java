@@ -1,8 +1,7 @@
-package kig.dashboard.global.config.jwt;
+package kig.dashboard.global.config.login;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import lombok.AccessLevel;
@@ -17,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Transactional
@@ -31,10 +28,10 @@ public class JwtService {
     private String secret;
 
     @Value("${jwt.access.expiration}")
-    private long accessTokenValidityInSeconds;
+    private long accessTokenExpirationTime;
 
     @Value("${jwt.refresh.expiration}")
-    private long refreshTokenValidityInSeconds;
+    private long refreshTokenExpirationTime;
 
     @Value("${jwt.access.header}")
     private String accessHeader;
@@ -52,7 +49,7 @@ public class JwtService {
     public String createdAccessToken(String username) {
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
-                .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenValidityInSeconds * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenExpirationTime * 1000))
                 .withClaim(USERNAME_CLAIM, username)
                 .sign(Algorithm.HMAC512(secret));
     }
@@ -60,7 +57,7 @@ public class JwtService {
     public String createRefreshToken() {
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
-                .withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenValidityInSeconds * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenExpirationTime * 1000))
                 .sign(Algorithm.HMAC512(secret));
     }
 

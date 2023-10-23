@@ -1,7 +1,7 @@
 package kig.dashboard.global.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kig.dashboard.global.config.jwt.JwtService;
+import kig.dashboard.global.config.login.JwtService;
 import kig.dashboard.global.config.login.filter.JsonUsernamePasswordAuthenticationFilter;
 import kig.dashboard.global.config.login.filter.JwtAuthenticationProcessingFilter;
 import kig.dashboard.global.config.login.handler.LoginFailureHandler;

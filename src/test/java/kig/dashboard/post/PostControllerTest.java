@@ -1,7 +1,7 @@
 package kig.dashboard.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kig.dashboard.global.config.jwt.JwtService;
+import kig.dashboard.global.config.login.JwtService;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.entity.MemberRole;

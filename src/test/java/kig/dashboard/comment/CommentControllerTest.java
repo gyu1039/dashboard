@@ -2,7 +2,7 @@ package kig.dashboard.comment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kig.dashboard.comment.dto.CommentSaveDTO;
-import kig.dashboard.global.config.jwt.JwtService;
+import kig.dashboard.global.config.login.JwtService;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.MemberService;
 import kig.dashboard.member.entity.Member;
@@ -10,8 +10,6 @@ import kig.dashboard.member.entity.MemberRole;
 import kig.dashboard.post.Post;
 import kig.dashboard.post.PostRepository;
 import kig.dashboard.post.dto.PostSaveDTO;
-import kig.dashboard.post.exception.PostException;
-import net.bytebuddy.dynamic.scaffold.MethodGraph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +74,7 @@ class CommentControllerTest {
     @BeforeEach
     private void signUpAndAUthentication() {
 
-        Member member = memberRepository.save(Member.builder().username(USERNAME)
+        member = memberRepository.save(Member.builder().username(USERNAME)
                 .password("1234")
                 .nickname("test1").role(MemberRole.USER).build());
         SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();

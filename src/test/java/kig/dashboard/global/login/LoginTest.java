@@ -120,7 +120,7 @@ public class LoginTest {
     public void 로그인요청URL오류() throws Exception {
         Map<String, String> map = getUsernamePasswordMap(USERNAME, PASSWORD);
 
-        perform(LOGIN_URL + "/123", MediaType.APPLICATION_JSON, map)
+        perform(LOGIN_URL + "123", MediaType.APPLICATION_JSON, map)
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }

@@ -1,4 +1,4 @@
-package kig.dashboard.global.file.service;
+package kig.dashboard.post;
 
 import kig.dashboard.post.file.service.FileService;
 import org.junit.jupiter.api.Test;

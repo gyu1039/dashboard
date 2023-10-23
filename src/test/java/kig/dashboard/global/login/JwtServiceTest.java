@@ -1,9 +1,9 @@
-package kig.dashboard.global.jwt;
+package kig.dashboard.global.login;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import kig.dashboard.global.config.jwt.JwtService;
+import kig.dashboard.global.config.login.JwtService;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.entity.MemberRole;
