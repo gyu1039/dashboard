@@ -11,9 +11,10 @@ import java.util.Optional;
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class PostUpdateDTO {
 
-    private Optional<String> title;
-    private Optional<String> content;
-    private Optional<MultipartFile> uploadFile;
+    @Builder.Default
+    private Optional<String> title = Optional.empty();
+    private Optional<String> content  = Optional.empty();
+    private Optional<MultipartFile> uploadFile  = Optional.empty();
 
 
 }

@@ -2,6 +2,7 @@ package kig.dashboard.comment;
 
 import kig.dashboard.comment.dto.CommentSaveDTO;
 import kig.dashboard.comment.dto.CommentUpdateDTO;
+import kig.dashboard.post.exception.PostException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ public class CommentController {
 
     @PostMapping("/comment/{postId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void commentSave(@PathVariable Long postId, CommentSaveDTO commentSaveDTO) {
+    public void commentSave(@PathVariable Long postId, CommentSaveDTO commentSaveDTO){
         commentService.save(postId, commentSaveDTO);
     }
 

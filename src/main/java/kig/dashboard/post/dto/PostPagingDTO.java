@@ -18,14 +18,14 @@ public class PostPagingDTO {
     private long totalElementCount;
     private int currentPageElementCount;
 
-    private List<SimplePostInfo> simpleLectureDTOList = new ArrayList<>();
+    private List<SimplePostInfo> simpleDTOList = new ArrayList<>();
 
     public PostPagingDTO(Page<Post> searchResults) {
         this.totalPageCount = searchResults.getTotalPages();
         this.currentPageNum = searchResults.getNumber();
         this.totalElementCount = searchResults.getTotalElements();
         this.currentPageElementCount = searchResults.getNumberOfElements();
-        this.simpleLectureDTOList = searchResults.getContent().stream().map(SimplePostInfo::new).collect(Collectors.toList());
+        this.simpleDTOList = searchResults.getContent().stream().map(SimplePostInfo::new).collect(Collectors.toList());
 
     }
 }

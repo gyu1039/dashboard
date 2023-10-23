@@ -4,6 +4,7 @@ import kig.dashboard.comment.exception.CommentException;
 import kig.dashboard.comment.exception.CommentExceptionType;
 import kig.dashboard.comment.dto.CommentSaveDTO;
 import kig.dashboard.comment.dto.CommentUpdateDTO;
+import kig.dashboard.global.exception.BaseException;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.exception.MemberException;
 import kig.dashboard.member.exception.MemberExceptionType;

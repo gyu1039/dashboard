@@ -1,6 +1,5 @@
 package kig.dashboard.post;
 
-import kig.dashboard.post.file.service.FileService;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.exception.MemberException;
 import kig.dashboard.member.exception.MemberExceptionType;
@@ -12,12 +11,12 @@ import kig.dashboard.post.dto.PostSaveDTO;
 import kig.dashboard.post.dto.PostUpdateDTO;
 import kig.dashboard.post.exception.PostException;
 import kig.dashboard.post.exception.PostExceptionType;
+import kig.dashboard.post.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 
 @Service
@@ -32,20 +31,24 @@ public class PostService {
 
     public void save(PostSaveDTO postSaveDTO) throws MemberException {
 
+
         Post post = postSaveDTO.toEntity();
 
         post.confirmWriter(memberRepository.findByUsername(SecurityUtil.getLoginUsername())
                 .orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER)));
 
+
         postSaveDTO.getUploadFile().ifPresent(
                 file -> post.updateFilePath(fileService.save(file))
         );
+
 
         postRepository.save(post);
     }
 
     public void update(Long id, PostUpdateDTO postUpdateDTO) {
 
+        log.info("{}", postUpdateDTO);
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new PostException(PostExceptionType.POST_NOT_FOUND)
         );

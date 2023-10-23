@@ -6,6 +6,7 @@ import kig.dashboard.post.dto.PostSaveDTO;
 import kig.dashboard.post.dto.PostUpdateDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class PostController {
 
     private final PostService postService;
@@ -23,6 +25,7 @@ public class PostController {
     @PostMapping("/post")
     @ResponseStatus(HttpStatus.CREATED)
     public void savePost(@Valid @ModelAttribute PostSaveDTO postSaveDTO) throws MemberException {
+        log.info("{}", postSaveDTO.toString());
         postService.save(postSaveDTO);
     }
 
