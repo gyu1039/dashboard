@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @Data
 public class CommentInfoDTO {
 
-    private final static String DEFAULT_DELETED_MESSAGE = "삭제된 댓글입니다";
+    public final static String DEFAULT_DELETED_MESSAGE = "삭제된 댓글입니다";
 
     private Long postId;
 

@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.Optional;
 @Entity
 @Table(name = "comments")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) @Getter
+@Slf4j
 public class Comment extends BaseTimeEntity {
 
     @Id
@@ -77,6 +79,15 @@ public class Comment extends BaseTimeEntity {
         this.isRemoved = true;
     }
 
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                ", isRemoved=" + isRemoved +
+                '}';
+    }
+
     @Builder
     public Comment(Member writer, Post post, Comment parent, String content) {
         this.writer = writer;
@@ -85,7 +96,7 @@ public class Comment extends BaseTimeEntity {
         this.content = content;
     }
 
-    public List<Comment> findRemovableList() {
+    public List<Comment> findCommentsToErase() {
 
         List<Comment> result = new ArrayList<>();
 
@@ -100,8 +111,11 @@ public class Comment extends BaseTimeEntity {
 
                 () -> {
                     if(isAllChildRemoved()) {
+
                         result.add(this);
                         result.addAll(this.getChildList());
+                    } else {
+                        log.info("{}", "여기가 출력되니?");
                     }
                 }
         );

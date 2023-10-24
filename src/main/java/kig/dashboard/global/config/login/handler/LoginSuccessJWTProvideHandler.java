@@ -23,7 +23,7 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
 
         String username = extractUsername(authentication);
-        String accessToken = jwtService.createdAccessToken(username);
+        String accessToken = jwtService.createAccessToken(username);
         String refreshToken = jwtService.createRefreshToken();
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);

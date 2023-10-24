@@ -70,8 +70,6 @@ class CommentServiceTest {
         String title = "제목";
         String content = "내용";
 
-//        Post post = Post.builder().writer(member).title(title).content(content).build();
-
         PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.empty());
         Post save = postRepository.save(postSaveDTO.toEntity());
         clear();
@@ -79,9 +77,13 @@ class CommentServiceTest {
         return save.getId();
     }
 
-    private Long saveComment() {
+    private Long saveComment(Long postId) {
+
+        Optional<Post> byId = postRepository.findById(postId);
+
         Comment comment = Comment.builder()
                 .content("댓글")
+                .post(byId.get())
                 .writer(member)
                 .build();
 
@@ -91,14 +93,18 @@ class CommentServiceTest {
     }
 
     private Long saveReComment(Long parentId) {
+
         Comment parent = commentRepository.findById(parentId).orElse(null);
+
         Comment comment = Comment.builder()
                 .writer(member)
                 .content("댓글").parent(parent).build();
         parent.addChild(comment);
         clear();
+
         return commentRepository.save(comment).getId();
     }
+
     private static final String USERNAME = "username";
     private static final String PASSWORD = "PASSWORD";
 
@@ -156,8 +162,9 @@ class CommentServiceTest {
 
     @Test
     public void 자식댓글저장_성공() {
+
         Long postId = savePost();
-        Long parentId = saveComment();
+        Long parentId = saveComment(postId);
 
         CommentSaveDTO commentSaveDTO = new CommentSaveDTO("자식댓글");
 
@@ -181,7 +188,7 @@ class CommentServiceTest {
     public void 자식댓글저장실패_게시글이없음() {
 
         Long postId = savePost();
-        Long parentId = saveComment();
+        Long parentId = saveComment(postId);
         CommentSaveDTO commentSaveDTO = new CommentSaveDTO("댓글");
 
         assertThat(
@@ -193,7 +200,7 @@ class CommentServiceTest {
     public void 업데이트성공() {
 
         Long postId = savePost();
-        Long parentId = saveComment();
+        Long parentId = saveComment(postId);
         Long reCommentId = saveReComment(parentId);
 
 
@@ -209,7 +216,7 @@ class CommentServiceTest {
     public void 업데이트실패() throws Exception {
 
         Long postId = savePost();
-        Long parentId = saveComment();
+        Long parentId = saveComment(postId);
         Long reCommentId = saveReComment(parentId);
 
         anotherSignUpAndSetAuthentication();
@@ -223,7 +230,7 @@ class CommentServiceTest {
     public void 삭제실패() throws Exception {
 
         Long postId = savePost();
-        Long parentId = saveComment();
+        Long parentId = saveComment(postId);
         Long reCommentId = saveReComment(parentId);
 
         anotherSignUpAndSetAuthentication();
@@ -241,7 +248,8 @@ class CommentServiceTest {
     @Test
     public void 댓글삭제_대댓글존재() throws Exception {
 
-        Long parentId = saveComment();
+        Long postId = savePost();
+        Long parentId = saveComment(postId);
         saveReComment(parentId);
         saveReComment(parentId);
         saveReComment(parentId);
@@ -265,7 +273,8 @@ class CommentServiceTest {
     @Test
     public void 댓글삭제_자식댓글없음() throws Exception {
 
-        Long commentId = saveComment();
+        Long postId = savePost();
+        Long commentId = saveComment(postId);
 
         commentService.remove(commentId);
 
@@ -282,7 +291,9 @@ class CommentServiceTest {
      */
     @Test
     public void 댓글삭제_자식댓글이모두삭제된경우() throws Exception {
-        Long id = saveComment();
+
+        Long postId = savePost();
+        Long id = saveComment(postId);
         Long recommentId1 = saveReComment(id);
         Long recommentId2 = saveReComment(id);
         Long recommentId3 = saveReComment(id);
@@ -321,7 +332,8 @@ class CommentServiceTest {
      */
     @Test
     public void 자식댓글삭제할때_부모댓글이삭제되지않은경우() throws Exception {
-        Long parentId = saveComment();
+        Long postId = savePost();
+        Long parentId = saveComment(postId);
         Long childId1 = saveReComment(parentId);
 
         commentService.remove(childId1);
@@ -340,7 +352,8 @@ class CommentServiceTest {
     @Test
     public void 자식댓글삭제할때_모든댓글삭제된경우() throws Exception {
 
-        Long parentId = saveComment();
+        Long postId = savePost();
+        Long parentId = saveComment(postId);
         Long childId1 = saveReComment(parentId);
         Long childId2 = saveReComment(parentId);
         Long childId3 = saveReComment(parentId);
@@ -354,6 +367,7 @@ class CommentServiceTest {
 
         commentService.remove(childId2);
 
+        assertThat(commentRepository.findAll().size()).isEqualTo(0);
         LongStream.rangeClosed(parentId, childId3).forEach(id ->
                 assertThrows(CommentException.class, () -> commentRepository.findById(id).orElseThrow(() -> new CommentException(CommentExceptionType.NOT_FOUND_COMMENT)))
         );
@@ -367,7 +381,8 @@ class CommentServiceTest {
     @Test
     public void 자식댓글삭제_다른자식댓글이남아있는경우() throws Exception {
 
-        Long parentId = saveComment();
+        Long postId = savePost();
+        Long parentId = saveComment(postId);
         Long childId1 = saveReComment(parentId);
         Long childId2 = saveReComment(parentId);
         Long childId3 = saveReComment(parentId);

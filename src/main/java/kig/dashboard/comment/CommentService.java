@@ -4,7 +4,6 @@ import kig.dashboard.comment.exception.CommentException;
 import kig.dashboard.comment.exception.CommentExceptionType;
 import kig.dashboard.comment.dto.CommentSaveDTO;
 import kig.dashboard.comment.dto.CommentUpdateDTO;
-import kig.dashboard.global.exception.BaseException;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.exception.MemberException;
 import kig.dashboard.member.exception.MemberExceptionType;
@@ -13,6 +12,7 @@ import kig.dashboard.post.PostRepository;
 import kig.dashboard.post.exception.PostException;
 import kig.dashboard.post.exception.PostExceptionType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +21,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -58,14 +59,19 @@ public class CommentService {
         commentUpdateDTO.getContent().ifPresent(comment::updateContent);
     }
 
-    public void remove(Long id) throws CommentException {
+    public void remove(Long id) {
 
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new CommentException(CommentExceptionType.NOT_FOUND_COMMENT));
+
         if (!comment.getWriter().getUsername().equals(SecurityUtil.getLoginUsername())) {
             throw new CommentException(CommentExceptionType.NOT_AUTHORITY_DELETE_COMMENT);
         }
+
         comment.remove();
-        List<Comment> removableList = comment.findRemovableList();
+
+        log.info("remove() {}", comment);
+
+        List<Comment> removableList = comment.findCommentsToErase();
         commentRepository.deleteAll(removableList);
     }
 }

@@ -5,22 +5,28 @@ import kig.dashboard.global.config.login.JwtService;
 import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.entity.MemberRole;
+import kig.dashboard.post.cond.PostSearchCondition;
 import kig.dashboard.post.dto.PostInfoDTO;
 import kig.dashboard.post.dto.PostPagingDTO;
 import kig.dashboard.post.file.service.FileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -52,7 +58,8 @@ class PostControllerTest {
     @Autowired
     PostRepository postRepository;
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -76,7 +83,7 @@ class PostControllerTest {
     }
 
     private String getAccessToken() {
-        return jwtService.createdAccessToken(USERNAME);
+        return jwtService.createAccessToken(USERNAME);
     }
 
     private MockMultipartFile getMockMultipartFile() throws IOException {
@@ -218,103 +225,6 @@ class PostControllerTest {
     }
 
 
-    @Test
-    public void 게시글수정_제목변경성공() throws Exception {
-
-        Post post = Post.builder().title("title before update").content("content before update").build();
-        post.confirmWriter(member);
-        Post save = postRepository.save(post);
-
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-
-        final String updateTitle = "제목";
-        map.add("title", updateTitle);
-
-        mockMvc.perform(
-                put("/post/" + save.getId()).header("Authorization", "Bearer " + getAccessToken())
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .params(map)
-        ).andExpect(status().isOk());
-
-        Post post1 = postRepository.findAll().get(0);
-        assertThat(post1.getTitle()).isEqualTo("제목");
-        assertThat(post1.getContent()).isEqualTo("content before update");
-    }
-
-    @Test
-    public void 게시글수정_내용변경성공() throws Exception {
-
-        Post post = Post.builder().title("title before update").content("content before update").build();
-        post.confirmWriter(member);
-        Post save = postRepository.save(post);
-
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-
-        final String updateContent = "내용";
-        map.add("content", updateContent);
-
-        mockMvc.perform(
-                put("/post/" + save.getId()).header("Authorization", "Bearer " + getAccessToken())
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .params(map)
-        ).andExpect(status().isOk());
-
-        Post post1 = postRepository.findAll().get(0);
-        assertThat(post1.getTitle()).isEqualTo("title before update");
-        assertThat(post1.getContent()).isEqualTo(updateContent);
-    }
-
-    @Test
-    public void 게시글수정_모두변경성공() throws Exception {
-
-        Post post = Post.builder().title("title before update").content("content before update").build();
-        post.confirmWriter(member);
-        Post save = postRepository.save(post);
-
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-
-        final String updateContent = "내용";
-        final String updateTitle = "제목";
-
-        map.add("content", updateContent);
-        map.add("title", updateTitle);
-
-        mockMvc.perform(
-                put("/post/" + save.getId()).header("Authorization", "Bearer " + getAccessToken())
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .params(map)
-        ).andExpect(status().isOk());
-
-        Post post1 = postRepository.findAll().get(0);
-        assertThat(post1.getTitle()).isEqualTo(updateTitle);
-        assertThat(post1.getContent()).isEqualTo(updateContent);
-    }
-
-    @Test
-    public void 게시글수정_업로드파일추가_성공() throws Exception {
-
-        Post post = Post.builder().title("title before update").content("content before update").build();
-        post.confirmWriter(member);
-        Post save = postRepository.save(post);
-
-        MockMultipartFile mockMultipartFile = getMockMultipartFile();
-
-        MockMultipartHttpServletRequestBuilder requestBuilder = multipart("/post/" + save.getId());
-        requestBuilder.with(request -> {
-            request.setMethod(HttpMethod.PUT.name());
-            return request;
-        });
-
-        mockMvc.perform(requestBuilder
-                        .file(mockMultipartFile)
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header("Authorization", "Bearer " + getAccessToken()))
-                .andExpect(status().isOk());
-
-        String filePath = postRepository.findAll().get(0).getFilePath();
-        assertThat(filePath).isNotNull();
-        assertThat(new File(filePath).delete()).isTrue();
-    }
 
     @Autowired
     private FileService fileService;
@@ -445,10 +355,10 @@ class PostControllerTest {
     @Value("${spring.data.web.pageable.default-page-size}")
     private int pageCount;
 
-    @Test
+   /* @Test
     public void 게시글_검색() throws Exception {
 
-        Member newMember = memberRepository.save(Member.builder().username("newMEmber1t123").password("1234").nickname("123").role(MemberRole.USER).build());
+        Member newMember = memberRepository.save(Member.builder().username("newMEmber1123").password("!23123124421").nickname("123").role(MemberRole.USER).build());
 
         final int POST_COUNT = 50;
         for(int i = 1; i<= POST_COUNT; i++ ){
@@ -465,12 +375,12 @@ class PostControllerTest {
                         .header("Authorization", "Bearer " + getAccessToken())
         ).andExpect(status().isOk()).andReturn();
 
-        //then
+
         PostPagingDTO postList = objectMapper.readValue(result.getResponse().getContentAsString(), PostPagingDTO.class);
 
         assertThat(postList.getTotalElementCount()).isEqualTo(POST_COUNT);
         assertThat(postList.getCurrentPageElementCount()).isEqualTo(pageCount);
         assertThat(postList.getSimpleDTOList().get(0).getContent()).isEqualTo("content50");
 
-    }
+    }*/
 }

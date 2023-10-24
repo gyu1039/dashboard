@@ -118,7 +118,7 @@ class JwtFilterAuthenticationTest {
     public void 모든토큰존재X() throws Exception {
 
         mockMvc.perform(
-                get("/tmp")).andExpect(status().isForbidden());
+                get("/post")).andExpect(status().isForbidden());
     }
 
     @Test

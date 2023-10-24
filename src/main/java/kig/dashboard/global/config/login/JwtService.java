@@ -46,10 +46,10 @@ public class JwtService {
 
     private final MemberRepository memberRepository;
 
-    public String createdAccessToken(String username) {
+    public String createAccessToken(String username) {
         return JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
-                .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenExpirationTime * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenExpirationTime))
                 .withClaim(USERNAME_CLAIM, username)
                 .sign(Algorithm.HMAC512(secret));
     }
@@ -57,7 +57,7 @@ public class JwtService {
     public String createRefreshToken() {
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
-                .withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenExpirationTime * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenExpirationTime))
                 .sign(Algorithm.HMAC512(secret));
     }
 
@@ -73,27 +73,18 @@ public class JwtService {
 
     public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
 
-//        response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_OK);
 
         setAccessTokenHeader(response, accessToken);
         setRefreshTokenHeader(response, refreshToken);
 
-        /*Map<String, String> tokenMap = new HashMap<>();
-        tokenMap.put(ACCESS_TOKEN_SUBJECT, accessToken);
-        tokenMap.put(REFRESH_TOKEN_SUBJECT, refreshToken);*/
-
-//        String token = objectMapper.writeValueAsString(tokenMap);
-//        response.getWriter().write(token);
     }
 
     public void sendAccessToken(HttpServletResponse response, String accessToken) {
+
         response.setStatus(HttpServletResponse.SC_OK);
 
         setAccessTokenHeader(response, accessToken);
-
-        /*Map<String, String> tokenMap = new HashMap<>();
-        tokenMap.put(ACCESS_TOKEN_SUBJECT, accessToken);*/
     }
 
     public Optional<String> extractAccessToken(HttpServletRequest request) {

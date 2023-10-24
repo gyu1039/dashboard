@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.IntStream;
@@ -114,15 +115,14 @@ class PostRepositoryTest {
         assertThat(postInfo.getPostId()).isEqualTo(post.getId());
         assertThat(postInfo.getContent()).isEqualTo(post.getContent());
         assertThat(postInfo.getWriterDTO().getUsername()).isEqualTo(post.getWriter().getUsername());
-
-        int reCommentCount = 0;
-        for (CommentInfoDTO commentInfoDTO : postInfo.getCommentInfoDTOList()) {
-            reCommentCount += commentInfoDTO.getReCommentInfoDTOList().size();
-        }
-
         assertThat(postInfo.getCommentInfoDTOList().size()).isEqualTo(10);
-        assertThat(reCommentCount).isEqualTo(10 * 20);
 
+        List<CommentInfoDTO> commentInfoDTOList = postInfo.getCommentInfoDTOList();
+        int total = commentInfoDTOList.size();
+        for (CommentInfoDTO commentInfoDTO : commentInfoDTOList) {
+            total += commentInfoDTO.getReCommentInfoDTOList().size();
+        }
+        assertThat(total).isEqualTo(10 * 20 + 10);
     }
 
 }
