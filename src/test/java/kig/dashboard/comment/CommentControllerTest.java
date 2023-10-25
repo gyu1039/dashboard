@@ -13,6 +13,7 @@ import kig.dashboard.member.entity.MemberRole;
 import kig.dashboard.post.Post;
 import kig.dashboard.post.PostRepository;
 import kig.dashboard.post.dto.PostSaveDTO;
+import kig.dashboard.post.exception.PostException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -125,7 +126,7 @@ class CommentControllerTest {
         commentService.save(postId, commentSaveDTO);
         clear();
 
-        List<Comment> resultList = em.createQuery("select c from Comment c order by c.createdDate desc ", Comment.class).getResultList();
+        List<Comment> resultList = em.createQuery("select c from Comment c order by c.createdDate desc", Comment.class).getResultList();
         return resultList.get(0).getId();
     }
 
@@ -215,7 +216,7 @@ class CommentControllerTest {
     public void 자식댓글저장_실패_부모댓글이_없음() throws Exception {
 
         Long postId = savePost();
-        Long parentId = saveComment(100L);
+        assertThrows(PostException.class, () -> saveComment(100L));
 
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("content", "recomment");

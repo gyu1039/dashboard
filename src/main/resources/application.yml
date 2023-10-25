@@ -1,5 +1,7 @@
-spring:
+server:
+  port: 8080
 
+spring:
   datasource:
     url: jdbc:mariadb://localhost:3306/dashboard
     driver-class-name: org.mariadb.jdbc.Driver

@@ -12,7 +12,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:8081/"})
 @Slf4j
 public class MemberController {
 
@@ -44,5 +43,11 @@ public class MemberController {
 
         MemberInfoDTO info = memberService.getMyInfo();
         return new ResponseEntity(info, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/checkuser/{username}")
+    public boolean checkDuplicatedId(@PathVariable String username) {
+
+        return memberService.isIdDuplicated(username);
     }
 }

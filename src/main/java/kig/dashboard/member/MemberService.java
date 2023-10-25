@@ -67,7 +67,7 @@ public class MemberService {
 
     }
 
-    private Member isMemberExists() throws Exception {
+    private Member isMemberExists() {
         return memberRepository
                 .findByUsername(SecurityUtil.getLoginUsername())
                 .orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER));
@@ -76,5 +76,9 @@ public class MemberService {
     public MemberInfoDTO getMyInfo() throws Exception {
         Member findMember = isMemberExists();
         return new MemberInfoDTO(findMember);
+    }
+
+    public boolean isIdDuplicated(String username) {
+        return memberRepository.findByUsername(username).isPresent();
     }
 }

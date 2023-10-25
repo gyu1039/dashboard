@@ -49,8 +49,8 @@ public class DummyData {
         public void save() {
             Member save1 = memberRepository.save(
                     Member.builder()
-                            .username("test1@gmail.com")
-                            .password(passwordEncoder.encode("test"))
+                            .username("admin@gmail.com")
+                            .password(passwordEncoder.encode("pass"))
                             .nickname("nickname1")
                             .role(MemberRole.USER)
                             .build());
