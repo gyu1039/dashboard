@@ -10,6 +10,4 @@ public class PostSearchCondition {
 
     private String title;
     private String content;
-
-
 }

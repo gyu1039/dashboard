@@ -31,23 +31,23 @@ public class CustomPostRepositoryImpl implements CustomPostRepository{
 
         List<Post> content = query.selectFrom(post)
                 .where(
-                        contentHasStr(postSearchCondition.getContent()),
-                        titleHasStr(postSearchCondition.getTitle())
+                        contentHasStr(postSearchCondition.getContent())
+                                .or(titleHasStr(postSearchCondition.getTitle()))
                 )
                 .leftJoin(post.writer, member)
                 .fetchJoin()
                 .orderBy(post.createdDate.desc())
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageNumber())
+                .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Post> countQuery = query.selectFrom(post)
+        int size = query.selectFrom(post)
                 .where(
                         contentHasStr(postSearchCondition.getContent()),
                         titleHasStr(postSearchCondition.getTitle())
-                );
+                ).fetch().size();
 
-        return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetch().size());
+        return PageableExecutionUtils.getPage(content, pageable, () -> size);
     }
 
     private BooleanExpression contentHasStr(String content) {

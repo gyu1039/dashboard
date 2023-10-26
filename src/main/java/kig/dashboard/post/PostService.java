@@ -95,7 +95,7 @@ public class PostService {
         return new PostInfoDTO(postRepository.findById(id).orElseThrow(() -> new PostException(PostExceptionType.POST_NOT_FOUND)));
     }
 
-    public PostPagingDTO getPostList(Pageable pageable, PostSearchCondition postSearchCondition) {
+    public PostPagingDTO getPostList(PostSearchCondition postSearchCondition, Pageable pageable) {
         return new PostPagingDTO(postRepository.search(postSearchCondition, pageable));
     }
 }

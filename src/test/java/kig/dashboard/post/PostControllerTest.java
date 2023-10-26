@@ -6,6 +6,7 @@ import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.entity.MemberRole;
 import kig.dashboard.post.dto.PostInfoDTO;
+import kig.dashboard.post.dto.PostPagingDTO;
 import kig.dashboard.post.file.service.FileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -346,7 +347,7 @@ class PostControllerTest {
     @Value("${spring.data.web.pageable.default-page-size}")
     private int pageCount;
 
-   /* @Test
+    @Test
     public void 게시글_검색() throws Exception {
 
         Member newMember = memberRepository.save(Member.builder().username("newMEmber1123").password("!23123124421").nickname("123").role(MemberRole.USER).build());
@@ -373,5 +374,5 @@ class PostControllerTest {
         assertThat(postList.getCurrentPageElementCount()).isEqualTo(pageCount);
         assertThat(postList.getSimpleDTOList().get(0).getContent()).isEqualTo("content50");
 
-    }*/
+    }
 }

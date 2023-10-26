@@ -46,6 +46,6 @@ public class PostController {
 
     @GetMapping("/post")
     public ResponseEntity search(Pageable pageable, PostSearchCondition postSearchCondition) {
-        return ResponseEntity.ok(postService.getPostList(pageable, postSearchCondition));
+        return ResponseEntity.ok(postService.getPostList(postSearchCondition, pageable));
     }
 }
