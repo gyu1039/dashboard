@@ -12,6 +12,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 @Slf4j
 public class MemberController {
 
@@ -39,10 +40,16 @@ public class MemberController {
     }
 
     @GetMapping("/member")
-    public ResponseEntity getMyInfo(HttpServletResponse response) throws Exception {
+    public ResponseEntity<?> getMyInfo(HttpServletResponse response) throws Exception {
 
         MemberInfoDTO info = memberService.getMyInfo();
-        return new ResponseEntity(info, HttpStatus.OK);
+        return new ResponseEntity<>(info, HttpStatus.OK);
+    }
+
+    @GetMapping("/member/{id}")
+    public ResponseEntity<?> getInfo(@Valid @PathVariable Long id) {
+        MemberInfoDTO info = memberService.getInfo(id);
+        return new ResponseEntity<>(info, HttpStatus.OK);
     }
 
     @GetMapping("/api/checkuser/{username}")

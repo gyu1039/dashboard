@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -24,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Transactional
 class MemberServiceTest {
 
     static final String PASSWORD = "password";
@@ -40,10 +41,6 @@ class MemberServiceTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @AfterEach
-    public void clear() {
-        memberRepository.deleteAll();
-    }
 
     private MemberSignUpDTO setMember() throws Exception {
 
@@ -186,6 +183,19 @@ class MemberServiceTest {
 
         assertThat(assertThrows(MemberException.class, () -> memberService.withdraw("123")).getExceptionType())
                 .isEqualTo(MemberExceptionType.WRONG_PASSWORD);
+    }
+
+    @Test
+    public void 회원정보조회() throws Exception {
+
+        MemberSignUpDTO memberSignUpDto = setMember();
+        Member member = memberRepository.findByUsername(memberSignUpDto.getUsername()).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER));
+
+
+        MemberInfoDTO info = memberService.getInfo(member.getId());
+
+        assertThat(info.getUsername()).isEqualTo(memberSignUpDto.getUsername());
+        assertThat(info.getNickname()).isEqualTo(memberSignUpDto.getNickname());
     }
 
     @Test

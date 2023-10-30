@@ -2,13 +2,13 @@ package kig.dashboard.comment;
 
 import kig.dashboard.comment.dto.CommentSaveDTO;
 import kig.dashboard.comment.dto.CommentUpdateDTO;
-import kig.dashboard.post.exception.PostException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class CommentController {
 
     private final CommentService commentService;

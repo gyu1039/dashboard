@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 public class PostService {
 
@@ -29,6 +28,7 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final FileService fileService;
 
+    @Transactional
     public void save(PostSaveDTO postSaveDTO) throws MemberException {
 
 
@@ -46,6 +46,7 @@ public class PostService {
         postRepository.save(post);
     }
 
+    @Transactional
     public void update(Long id, PostUpdateDTO postUpdateDTO) {
 
         log.info("{}", postUpdateDTO);
@@ -69,6 +70,7 @@ public class PostService {
 
     }
 
+    @Transactional
     public void delete(Long id) {
 
         Post post = postRepository.findById(id).orElseThrow(
@@ -91,10 +93,12 @@ public class PostService {
         }
     }
 
+    @Transactional(readOnly = true)
     public PostInfoDTO getPostInfo(Long id) {
         return new PostInfoDTO(postRepository.findById(id).orElseThrow(() -> new PostException(PostExceptionType.POST_NOT_FOUND)));
     }
 
+    @Transactional(readOnly = true)
     public PostPagingDTO getPostList(PostSearchCondition postSearchCondition, Pageable pageable) {
         return new PostPagingDTO(postRepository.search(postSearchCondition, pageable));
     }

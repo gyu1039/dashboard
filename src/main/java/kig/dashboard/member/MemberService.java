@@ -73,6 +73,11 @@ public class MemberService {
                 .orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER));
     }
 
+    public MemberInfoDTO getInfo(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER));
+        return new MemberInfoDTO(member);
+    }
+
     public MemberInfoDTO getMyInfo() throws Exception {
         Member findMember = isMemberExists();
         return new MemberInfoDTO(findMember);

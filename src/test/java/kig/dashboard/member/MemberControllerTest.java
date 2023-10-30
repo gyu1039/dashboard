@@ -1,8 +1,11 @@
 package kig.dashboard.member;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kig.dashboard.member.dto.MemberSignUpDTO;
 import kig.dashboard.member.entity.Member;
+import kig.dashboard.member.exception.MemberException;
+import kig.dashboard.member.exception.MemberExceptionType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -297,6 +300,59 @@ class MemberControllerTest {
         Member member = memberRepository.findByUsername(username).orElseThrow();
         assertThat(member).isNotNull();
     }
+
+    @Test
+    public void 회원조회() throws Exception {
+        String signUpData = objectMapper.writeValueAsString(new MemberSignUpDTO(username, password, nickname));
+        signUp(signUpData);
+
+        String accessToken = getAccessToken();
+
+        Long id = memberRepository.findAll().get(0).getId();
+
+        MvcResult result = mockMvc.perform(
+                get("/member/" + id)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .header(accessHeader, BEARER + accessToken)
+        ).andExpect(status().isOk()).andReturn();
+
+
+        Map<String, Object> map = objectMapper.readValue(result.getResponse().getContentAsString(), Map.class);
+        Member member = memberRepository.findByUsername(username).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER));
+
+        assertThat(member.getUsername()).isEqualTo(map.get("username"));
+    }
+
+    @Test
+    public void 회원조회실패_없는회원조회() throws Exception {
+
+        String signUpData = objectMapper.writeValueAsString(new MemberSignUpDTO(username, password, nickname));
+        signUp(signUpData);
+
+        String accessToken = getAccessToken();
+
+        MvcResult result = mockMvc.perform(
+                get("/member/" + 123)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .header(accessHeader, BEARER + accessToken)
+        ).andExpect(status().isNotFound()).andReturn();
+
+        Map<String, Integer> map = objectMapper.readValue(result.getResponse().getContentAsString(), Map.class);
+        assertThat(map.get("errorCode")).isEqualTo(MemberExceptionType.NOT_FOUND_MEMBER.getErrorCode());
+    }
+
+    @Test
+    public void 회원조회실패_토큰없음() throws Exception {
+
+        String signUpData = objectMapper.writeValueAsString(new MemberSignUpDTO(username, password, nickname));
+        signUp(signUpData);
+
+        mockMvc.perform(
+                get("/member/" + 123)
+                        .characterEncoding(StandardCharsets.UTF_8)
+        ).andExpect(status().isForbidden());
+    }
+
 
     @Test
     public void 내정보조회_성공() throws Exception {

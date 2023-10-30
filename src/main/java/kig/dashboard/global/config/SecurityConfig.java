@@ -32,7 +32,7 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final CorsFilter corsFilter;
 
-    @Bean
+//    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http

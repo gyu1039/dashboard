@@ -17,6 +17,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/api")
 @Slf4j
 public class PostController {
 
@@ -40,12 +41,12 @@ public class PostController {
     }
 
     @GetMapping("/post/{postId}")
-    public ResponseEntity getInfo(@PathVariable Long postId) {
+    public ResponseEntity<?> getInfo(@PathVariable Long postId) {
         return ResponseEntity.ok(postService.getPostInfo(postId));
     }
 
     @GetMapping("/post")
-    public ResponseEntity search(Pageable pageable, PostSearchCondition postSearchCondition) {
+    public ResponseEntity<?> search(Pageable pageable, PostSearchCondition postSearchCondition) {
         return ResponseEntity.ok(postService.getPostList(postSearchCondition, pageable));
     }
 }
