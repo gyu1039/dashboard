@@ -5,14 +5,14 @@ import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.entity.MemberRole;
 import kig.dashboard.post.cond.PostSearchCondition;
 import kig.dashboard.post.dto.PostPagingDTO;
+import kig.dashboard.post.entity.Post;
+import kig.dashboard.post.repository.PostRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.querydsl.QPageRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class CustomPostRepositoryImplTest {
@@ -46,7 +46,7 @@ class CustomPostRepositoryImplTest {
 
         PostSearchCondition postSearchCondition = new PostSearchCondition();
 
-        PostPagingDTO postList = postService.getPostList(postSearchCondition, pageRequest);
+        PostPagingDTO postList = postService.searchWithConditions(postSearchCondition, pageRequest);
 
         assertThat(postList.getTotalElementCount()).isEqualTo(POST_COUNT);
         assertThat(postList.getTotalPageCount()).isEqualTo(POST_COUNT/SIZE + 1);
@@ -81,7 +81,7 @@ class CustomPostRepositoryImplTest {
         PostSearchCondition postSearchCondition = new PostSearchCondition();
         postSearchCondition.setTitle(SEARCH_TITLE_STRING);
 
-        PostPagingDTO postList = postService.getPostList(postSearchCondition, pageRequest);
+        PostPagingDTO postList = postService.searchWithConditions(postSearchCondition, pageRequest);
 
         assertThat(postList.getTotalElementCount()).isEqualTo(COND_POST_COUNT);
         assertThat(postList.getTotalPageCount()).isEqualTo(COND_POST_COUNT  / SIZE);
@@ -116,7 +116,7 @@ class CustomPostRepositoryImplTest {
         PostSearchCondition postSearchCondition = new PostSearchCondition();
         postSearchCondition.setContent(SEARCH_CONTENT_STRING);
 
-        PostPagingDTO postList = postService.getPostList(postSearchCondition, pageRequest);
+        PostPagingDTO postList = postService.searchWithConditions(postSearchCondition, pageRequest);
 
         assertThat(postList.getTotalElementCount()).isEqualTo(COND_POST_COUNT);
         assertThat(postList.getTotalPageCount()).isEqualTo(COND_POST_COUNT  / SIZE);
@@ -160,7 +160,7 @@ class CustomPostRepositoryImplTest {
         postSearchCondition.setContent(SEARCH_CONTENT_STRING);
         postSearchCondition.setTitle(SEARCH_TITLE_STRING);
 
-        PostPagingDTO postList = postService.getPostList(postSearchCondition, pageRequest);
+        PostPagingDTO postList = postService.searchWithConditions(postSearchCondition, pageRequest);
 
         assertThat(postList.getTotalElementCount()).isEqualTo(COND_POST_COUNT);
         assertThat(postList.getTotalPageCount()).isEqualTo(COND_POST_COUNT  / SIZE);

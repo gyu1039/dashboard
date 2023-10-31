@@ -1,6 +1,6 @@
 package kig.dashboard.post.dto;
 
-import kig.dashboard.post.Post;
+import kig.dashboard.post.entity.Post;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -1,4 +1,4 @@
-package kig.dashboard.post;
+package kig.dashboard.post.entity;
 
 import kig.dashboard.comment.Comment;
 import kig.dashboard.global.domain.BaseTimeEntity;
@@ -20,6 +20,10 @@ public class Post extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @Column(length = 40)
     @NotBlank
     private String title;
@@ -32,15 +36,16 @@ public class Post extends BaseTimeEntity {
     @Column
     private String filePath;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id")
     private Member writer;
 
     @Builder
-    public Post(String title, String content, Member writer) {
+    public Post(String title, String content, Member writer, Category category) {
         this.title = title;
         this.content = content;
         this.writer = writer;
+        this.category = category;
     }
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -57,6 +62,11 @@ public class Post extends BaseTimeEntity {
 
     public void addComment(Comment comment) {
         commentList.add(comment);
+    }
+
+    public void confirmCategory(Category category) {
+        this.category = category;
+        category.addPost(this);
     }
 
 

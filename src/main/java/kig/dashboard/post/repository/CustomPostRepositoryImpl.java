@@ -1,9 +1,9 @@
-package kig.dashboard.post;
+package kig.dashboard.post.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kig.dashboard.post.cond.PostSearchCondition;
+import kig.dashboard.post.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -32,7 +32,7 @@ public class CustomPostRepositoryImpl implements CustomPostRepository{
         List<Post> content = query.selectFrom(post)
                 .where(
                         contentHasStr(postSearchCondition.getContent())
-                                .or(titleHasStr(postSearchCondition.getTitle()))
+                        , (titleHasStr(postSearchCondition.getTitle()))
                 )
                 .leftJoin(post.writer, member)
                 .fetchJoin()

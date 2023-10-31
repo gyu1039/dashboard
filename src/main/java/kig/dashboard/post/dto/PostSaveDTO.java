@@ -1,6 +1,7 @@
 package kig.dashboard.post.dto;
 
-import kig.dashboard.post.Post;
+import kig.dashboard.post.entity.Category;
+import kig.dashboard.post.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,9 @@ public class PostSaveDTO {
 
     @NotBlank(message = "내용을 입력해주세요")
     private String content;
+
+//    @NotBlank(message = "카테고리를 선택해주세요")
+    private Category category;
 
     @Builder.Default
     private Optional<MultipartFile> uploadFile = Optional.empty();

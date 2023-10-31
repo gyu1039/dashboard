@@ -30,9 +30,9 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final MemberRepository memberRepository;
     private final JwtService jwtService;
-    private final CorsFilter corsFilter;
+    private final CorsConfig corsConfig;
 
-//    @Bean
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
@@ -41,16 +41,16 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(corsFilter)
-                .authorizeRequests()
-                .antMatchers("/login", "/signup", "/").permitAll()
+                .addFilter(corsConfig.corsFilter());
+//                .authorizeRequests()
+//                .antMatchers("/login", "/signup", "/").permitAll()
 //                .antMatchers("/todo1").hasRole("ROLE_TEAM1")
 //                .antMatchers("/todo2").hasRole("ROLE_TEAM2")
 //                .antMatchers("/todo3").hasRole("ROLE_TEAM3")
-                .anyRequest().authenticated();
+//                .anyRequest().authenticated();
 
-        http.addFilterAfter(jsonUsernamePasswordLoginFilter(), LogoutFilter.class);
-        http.addFilterBefore(jwtAuthenticationProcessingFilter(), JsonUsernamePasswordAuthenticationFilter.class);
+//        http.addFilterAfter(jsonUsernamePasswordLoginFilter(), LogoutFilter.class);
+//        http.addFilterBefore(jwtAuthenticationProcessingFilter(), JsonUsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

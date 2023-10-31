@@ -8,7 +8,7 @@ import kig.dashboard.member.MemberRepository;
 import kig.dashboard.member.exception.MemberException;
 import kig.dashboard.member.exception.MemberExceptionType;
 import kig.dashboard.member.login.SecurityUtil;
-import kig.dashboard.post.PostRepository;
+import kig.dashboard.post.repository.PostRepository;
 import kig.dashboard.post.exception.PostException;
 import kig.dashboard.post.exception.PostExceptionType;
 import lombok.RequiredArgsConstructor;

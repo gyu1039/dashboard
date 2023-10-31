@@ -5,8 +5,9 @@ import kig.dashboard.post.cond.PostSearchCondition;
 import kig.dashboard.post.dto.PostSaveDTO;
 import kig.dashboard.post.dto.PostUpdateDTO;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,30 +24,41 @@ public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/post")
+    @Value("${spring.data.web.pageable.default-page-size}")
+    private int size;
+
+    @GetMapping("/posts")
+    public ResponseEntity<?> postList(@RequestParam(defaultValue = "0") int page) {
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        return ResponseEntity.ok(postService.getList(pageRequest));
+    }
+
+    @PostMapping("/posts")
     @ResponseStatus(HttpStatus.CREATED)
     public void savePost(@Valid @ModelAttribute PostSaveDTO postSaveDTO) throws MemberException {
         log.info("{}", postSaveDTO.toString());
         postService.save(postSaveDTO);
     }
 
-    @PutMapping("/post/{postId}")
+    @PutMapping("/posts/{postId}")
     public void updatePost(@PathVariable Long postId, @ModelAttribute PostUpdateDTO postUpdateDTO) {
         postService.update(postId, postUpdateDTO);
     }
 
-    @DeleteMapping("/post/{postId}")
+    @DeleteMapping("/posts/{postId}")
     public void deletePost(@PathVariable Long postId) {
         postService.delete(postId);
     }
 
-    @GetMapping("/post/{postId}")
+    @GetMapping("/posts/{postId}")
     public ResponseEntity<?> getInfo(@PathVariable Long postId) {
         return ResponseEntity.ok(postService.getPostInfo(postId));
     }
 
-    @GetMapping("/post")
+    @GetMapping("/posts/search")
     public ResponseEntity<?> search(Pageable pageable, PostSearchCondition postSearchCondition) {
-        return ResponseEntity.ok(postService.getPostList(postSearchCondition, pageable));
+        return ResponseEntity.ok(postService.searchWithConditions(postSearchCondition, pageable));
     }
 }

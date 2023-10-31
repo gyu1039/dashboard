@@ -23,7 +23,7 @@ public class CorsConfig {
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setExposedHeaders(Arrays.asList("Authorization", "Authorization-refresh"));
-        source.registerCorsConfiguration("", config);
+        source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source);
     }

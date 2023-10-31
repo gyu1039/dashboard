@@ -3,7 +3,8 @@ package kig.dashboard.post.dto;
 import kig.dashboard.comment.Comment;
 import kig.dashboard.comment.dto.CommentInfoDTO;
 import kig.dashboard.member.dto.MemberInfoDTO;
-import kig.dashboard.post.Post;
+import kig.dashboard.post.entity.Category;
+import kig.dashboard.post.entity.Post;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class PostInfoDTO {
 
     private Long postId;
+    private Category category;
     private String title;
     private String content;
     private String filePath;
@@ -28,9 +30,11 @@ public class PostInfoDTO {
     public PostInfoDTO(Post post) {
 
         this.postId = post.getId();
+        this.category = post.getCategory();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.filePath = post.getFilePath();
+
 
         this.writerDTO = new MemberInfoDTO(post.getWriter());
 

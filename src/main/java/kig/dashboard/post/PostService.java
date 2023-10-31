@@ -9,14 +9,20 @@ import kig.dashboard.post.dto.PostInfoDTO;
 import kig.dashboard.post.dto.PostPagingDTO;
 import kig.dashboard.post.dto.PostSaveDTO;
 import kig.dashboard.post.dto.PostUpdateDTO;
+import kig.dashboard.post.entity.Post;
 import kig.dashboard.post.exception.PostException;
 import kig.dashboard.post.exception.PostExceptionType;
 import kig.dashboard.post.file.service.FileService;
+import kig.dashboard.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+import java.util.List;
 
 
 @Service
@@ -27,6 +33,12 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final FileService fileService;
+
+
+    @Transactional
+    public PostPagingDTO getList(Pageable pageable) {
+        return new PostPagingDTO(postRepository.findAllByOrderByCreatedDateDesc(pageable));
+    }
 
     @Transactional
     public void save(PostSaveDTO postSaveDTO) throws MemberException {
@@ -99,7 +111,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostPagingDTO getPostList(PostSearchCondition postSearchCondition, Pageable pageable) {
+    public PostPagingDTO searchWithConditions(PostSearchCondition postSearchCondition, Pageable pageable) {
         return new PostPagingDTO(postRepository.search(postSearchCondition, pageable));
     }
 }

@@ -1,6 +1,6 @@
 package kig.dashboard.post.dto;
 
-import kig.dashboard.post.Post;
+import kig.dashboard.post.entity.Post;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +26,8 @@ public class PostPagingDTO {
         this.totalElementCount = searchResults.getTotalElements();
         this.currentPageElementCount = searchResults.getNumberOfElements();
         this.simpleDTOList = searchResults.getContent().stream().map(SimplePostInfo::new).collect(Collectors.toList());
+        
+
 
     }
 }
