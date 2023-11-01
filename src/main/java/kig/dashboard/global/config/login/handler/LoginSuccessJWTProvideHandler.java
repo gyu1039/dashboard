@@ -1,7 +1,7 @@
 package kig.dashboard.global.config.login.handler;
 
 import kig.dashboard.global.config.login.JwtService;
-import kig.dashboard.member.MemberRepository;
+import kig.dashboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

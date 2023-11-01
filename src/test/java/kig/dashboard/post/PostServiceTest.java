@@ -1,9 +1,9 @@
 package kig.dashboard.post;
 
-import kig.dashboard.member.MemberRepository;
+import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.MemberService;
 import kig.dashboard.member.dto.MemberSignUpDTO;
-import kig.dashboard.member.entity.MemberRole;
+import kig.dashboard.member.MemberRole;
 import kig.dashboard.post.dto.PostSaveDTO;
 import kig.dashboard.post.dto.PostUpdateDTO;
 import kig.dashboard.post.entity.Post;
@@ -30,8 +30,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
-@Transactional
+//@SpringBootTest
+//@Transactional
 class PostServiceTest {
 
     @Autowired

@@ -1,8 +1,7 @@
 package kig.dashboard.member;
 
 import kig.dashboard.member.entity.Member;
-import kig.dashboard.member.entity.MemberRole;
-import org.apache.tomcat.util.security.Escape;
+import kig.dashboard.member.repository.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

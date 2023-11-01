@@ -14,10 +14,10 @@ import javax.validation.constraints.Size;
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class MemberSignUpDTO {
 
-    @NotBlank(message = "아이디를 입력해주세요") @Size(min=7, max=25)
+    @NotBlank(message = "아이디를 입력해주세요") @Size(min=4, max=25)
     private String username;
 
-    @NotBlank(message = "비밀번호를 입력해주세요") @Size(min=8)
+    @NotBlank(message = "비밀번호를 입력해주세요") @Size(min=4)
     private String password;
 
     @NotBlank(message = "별명을 입력해주세요")

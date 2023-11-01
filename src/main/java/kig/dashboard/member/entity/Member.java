@@ -1,14 +1,15 @@
 package kig.dashboard.member.entity;
 
-import kig.dashboard.post.entity.Post;
 import kig.dashboard.comment.Comment;
 import kig.dashboard.global.domain.BaseTimeEntity;
+import kig.dashboard.member.MemberRole;
+import kig.dashboard.member.repository.GroupRepository;
+import kig.dashboard.post.entity.Post;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,16 +32,31 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, length = 30)
     private String nickname;
 
-    @Column
-    @NotNull
-    private MemberRole role;
-
     @Column(length = 1000)
     private String refreshToken;
 
-    /**
-     * 패스워드 암호화
-     */
+    @Builder.Default
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> postList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member")
+    private List<RoleMember> roleList = new ArrayList<>();
+
+    @JoinColumn
+    @ManyToOne
+    private Group group;
+
+
+    public void setGroup(Group group) {
+        this.group = group;
+        group.getMemberList().add(this);
+    }
+
     public void encodePassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
     }
@@ -79,14 +95,6 @@ public class Member extends BaseTimeEntity {
      * 연관관계 편의
      */
 
-    @Builder.Default
-    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> postList = new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> commentList = new ArrayList<>();
-
 
     public void addPost(Post post) {
         postList.add(post);
@@ -94,5 +102,17 @@ public class Member extends BaseTimeEntity {
 
     public void addComment(Comment comment) {
         commentList.add(comment);
+    }
+
+    @Column
+    private MemberRole role;
+
+    public void initGroup(GroupRepository groupRepository) {
+        this.group = groupRepository.findByName("기본그룹").orElse(null);
+
+        if(group != null) {
+            group.getMemberList().add(this);
+        }
+
     }
 }

@@ -2,7 +2,7 @@ package kig.dashboard.global.config.login;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import kig.dashboard.member.MemberRepository;
+import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

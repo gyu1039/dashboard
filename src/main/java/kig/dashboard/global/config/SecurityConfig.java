@@ -6,7 +6,7 @@ import kig.dashboard.global.config.login.filter.JsonUsernamePasswordAuthenticati
 import kig.dashboard.global.config.login.filter.JwtAuthenticationProcessingFilter;
 import kig.dashboard.global.config.login.handler.LoginFailureHandler;
 import kig.dashboard.global.config.login.handler.LoginSuccessJWTProvideHandler;
-import kig.dashboard.member.MemberRepository;
+import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.login.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +19,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -41,7 +39,11 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(corsConfig.corsFilter());
+                .addFilter(corsConfig.corsFilter())
+//                .authorizeRequests()
+//                .antMatchers("")
+//                .anyRequest().authenticated()
+                ;
 //                .authorizeRequests()
 //                .antMatchers("/login", "/signup", "/").permitAll()
 //                .antMatchers("/todo1").hasRole("ROLE_TEAM1")

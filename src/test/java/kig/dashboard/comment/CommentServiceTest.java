@@ -5,11 +5,11 @@ import kig.dashboard.comment.exception.CommentExceptionType;
 import kig.dashboard.comment.dto.CommentSaveDTO;
 import kig.dashboard.comment.dto.CommentUpdateDTO;
 import kig.dashboard.global.exception.BaseExceptionType;
-import kig.dashboard.member.MemberRepository;
+import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.MemberService;
 import kig.dashboard.member.dto.MemberSignUpDTO;
 import kig.dashboard.member.entity.Member;
-import kig.dashboard.member.entity.MemberRole;
+import kig.dashboard.member.MemberRole;
 import kig.dashboard.member.exception.MemberException;
 import kig.dashboard.member.exception.MemberExceptionType;
 import kig.dashboard.post.entity.Post;
@@ -37,8 +37,8 @@ import java.util.stream.LongStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
-@Transactional
+//@SpringBootTest
+//@Transactional
 class CommentServiceTest {
 
     @Autowired
@@ -70,7 +70,7 @@ class CommentServiceTest {
         String title = "제목";
         String content = "내용";
 
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.empty());
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, null, Optional.empty());
         Post save = postRepository.save(postSaveDTO.toEntity());
         clear();
 

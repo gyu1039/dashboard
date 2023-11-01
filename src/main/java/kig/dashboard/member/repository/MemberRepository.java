@@ -1,4 +1,4 @@
-package kig.dashboard.member;
+package kig.dashboard.member.repository;
 
 import kig.dashboard.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

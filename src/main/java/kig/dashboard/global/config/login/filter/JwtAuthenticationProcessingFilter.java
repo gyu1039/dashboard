@@ -1,7 +1,7 @@
 package kig.dashboard.global.config.login.filter;
 
 import kig.dashboard.global.config.login.JwtService;
-import kig.dashboard.member.MemberRepository;
+import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

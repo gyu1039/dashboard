@@ -47,14 +47,14 @@ public class MemberController {
     }
 
     @GetMapping("/member/{id}")
-    public ResponseEntity<?> getInfo(@Valid @PathVariable Long id) {
+    public ResponseEntity<?> getInfo(@PathVariable Long id) {
         MemberInfoDTO info = memberService.getInfo(id);
         return new ResponseEntity<>(info, HttpStatus.OK);
     }
 
-    @GetMapping("/api/checkuser/{username}")
-    public boolean checkDuplicatedId(@PathVariable String username) {
+    @GetMapping("/checkid/{username}")
+    public ResponseEntity<?> isDuplicatedId(@PathVariable String username) {
 
-        return memberService.isIdDuplicated(username);
+        return new ResponseEntity<>(memberService.isIdDuplicated(username), HttpStatus.OK);
     }
 }

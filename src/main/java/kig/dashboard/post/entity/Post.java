@@ -20,9 +20,9 @@ public class Post extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "category_id")
+//    private Category category;
 
     @Column(length = 40)
     @NotBlank
@@ -41,11 +41,10 @@ public class Post extends BaseTimeEntity {
     private Member writer;
 
     @Builder
-    public Post(String title, String content, Member writer, Category category) {
+    public Post(String title, String content, Member writer) {
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.category = category;
     }
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -64,10 +63,10 @@ public class Post extends BaseTimeEntity {
         commentList.add(comment);
     }
 
-    public void confirmCategory(Category category) {
-        this.category = category;
-        category.addPost(this);
-    }
+//    public void confirmCategory(Category category) {
+//        this.category = category;
+//        category.addPost(this);
+//    }
 
 
     /**

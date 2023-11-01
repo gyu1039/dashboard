@@ -1,6 +1,6 @@
 package kig.dashboard.member.login;
 
-import kig.dashboard.member.MemberRepository;
+import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
@@ -22,7 +22,7 @@ public class LoginService implements UserDetailsService {
         return User.builder()
                 .username(member.getUsername())
                 .password(member.getPassword())
-                .roles(member.getRole().name())
+//                .roles(member.getRole().name())
                 .build();
     }
 }

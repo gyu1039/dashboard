@@ -30,7 +30,7 @@ public class PostInfoDTO {
     public PostInfoDTO(Post post) {
 
         this.postId = post.getId();
-        this.category = post.getCategory();
+//        this.category = post.getCategory();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.filePath = post.getFilePath();

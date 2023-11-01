@@ -6,10 +6,10 @@ import kig.dashboard.comment.dto.CommentSaveDTO;
 import kig.dashboard.comment.exception.CommentException;
 import kig.dashboard.comment.exception.CommentExceptionType;
 import kig.dashboard.global.config.login.JwtService;
-import kig.dashboard.member.MemberRepository;
+import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.MemberService;
 import kig.dashboard.member.entity.Member;
-import kig.dashboard.member.entity.MemberRole;
+import kig.dashboard.member.MemberRole;
 import kig.dashboard.post.entity.Post;
 import kig.dashboard.post.repository.PostRepository;
 import kig.dashboard.post.dto.PostSaveDTO;
@@ -113,7 +113,7 @@ class CommentControllerTest {
     private Long savePost() {
         String title = "제목";
         String content = "내용";
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.empty());
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, null, Optional.empty());
 
         Post save = postRepository.save(postSaveDTO.toEntity());
         clear();

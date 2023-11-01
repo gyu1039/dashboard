@@ -1,4 +1,4 @@
-package kig.dashboard.member.entity;
+package kig.dashboard.member;
 
 public enum MemberRole {
 

@@ -1,8 +1,8 @@
 package kig.dashboard.post;
 
-import kig.dashboard.member.MemberRepository;
+import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.entity.Member;
-import kig.dashboard.member.entity.MemberRole;
+import kig.dashboard.member.MemberRole;
 import kig.dashboard.post.cond.PostSearchCondition;
 import kig.dashboard.post.dto.PostPagingDTO;
 import kig.dashboard.post.entity.Post;

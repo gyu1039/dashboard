@@ -7,6 +7,8 @@ import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.exception.MemberException;
 import kig.dashboard.member.exception.MemberExceptionType;
 import kig.dashboard.member.login.SecurityUtil;
+import kig.dashboard.member.repository.GroupRepository;
+import kig.dashboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,12 +23,14 @@ import javax.transaction.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final GroupRepository groupRepository;
     private final PasswordEncoder passwordEncoder;
 
     public void signUp(MemberSignUpDTO memberSignUpDTO) throws Exception {
 
         Member member = memberSignUpDTO.toEntity();
-        member.addUserAuthority();
+//        member.addUserAuthority();
+        member.initGroup(groupRepository);
         member.encodePassword(passwordEncoder);
 
         if (memberRepository.findByUsername(memberSignUpDTO.getUsername()).isPresent()) {
@@ -84,6 +88,6 @@ public class MemberService {
     }
 
     public boolean isIdDuplicated(String username) {
-        return memberRepository.findByUsername(username).isPresent();
+        return memberRepository.existsByUsername(username);
     }
 }

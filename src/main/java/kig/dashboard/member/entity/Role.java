@@ -1,5 +1,8 @@
-package kig.dashboard.post.entity;
+package kig.dashboard.member.entity;
 
+
+import jdk.jfr.BooleanFlag;
+import kig.dashboard.member.MemberRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,24 +12,19 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Entity
+@Entity
 @Getter @NoArgsConstructor @AllArgsConstructor @Builder
-public class Category {
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column
     private String name;
 
-    @OneToMany(mappedBy = "category")
     @Builder.Default
-    private List<Post> postList = new ArrayList<>();
-
-    public void addPost(Post post) {
-        this.postList.add(post);
-    }
-
+    @OneToMany(mappedBy = "role")
+    private List<RoleMember> memberList = new ArrayList<>();
 
 }

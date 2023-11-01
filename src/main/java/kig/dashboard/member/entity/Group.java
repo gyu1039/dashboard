@@ -1,32 +1,27 @@
-package kig.dashboard.post.entity;
+package kig.dashboard.member.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Entity
-@Getter @NoArgsConstructor @AllArgsConstructor @Builder
-public class Category {
+@Entity @Table(name = "groups")
+@Getter @AllArgsConstructor @NoArgsConstructor @Builder
+public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column
     private String name;
 
-    @OneToMany(mappedBy = "category")
     @Builder.Default
-    private List<Post> postList = new ArrayList<>();
-
-    public void addPost(Post post) {
-        this.postList.add(post);
-    }
-
-
+    @OneToMany(mappedBy = "group")
+    private List<Member> memberList = new ArrayList<>();
 }
