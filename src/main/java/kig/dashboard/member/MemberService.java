@@ -6,7 +6,7 @@ import kig.dashboard.member.dto.MemberUpdateDTO;
 import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.exception.MemberException;
 import kig.dashboard.member.exception.MemberExceptionType;
-import kig.dashboard.member.login.SecurityUtil;
+import kig.dashboard.global.config.login.SecurityUtil;
 import kig.dashboard.member.repository.GroupRepository;
 import kig.dashboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

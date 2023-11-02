@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) @AllArgsConstructor @Builder
@@ -45,12 +46,15 @@ public class Member extends BaseTimeEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "member")
-    private List<RoleMember> roleList = new ArrayList<>();
+    private List<RoleMember> roleMembers = new ArrayList<>();
 
     @JoinColumn
     @ManyToOne
     private Group group;
 
+    public List<String> getRoles() {
+        return roleMembers.stream().map((e) -> e.getRole().getName()).collect(Collectors.toList());
+    }
 
     public void setGroup(Group group) {
         this.group = group;

@@ -25,7 +25,7 @@ public class RoleMember {
 
     public void setMember(Member member) {
         this.member = member;
-        member.getRoleList().add(this);
+        member.getRoleMembers().add(this);
     }
 
     public void setRole(Role role) {

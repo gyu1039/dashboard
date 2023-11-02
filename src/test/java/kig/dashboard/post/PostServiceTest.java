@@ -30,8 +30,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-//@SpringBootTest
-//@Transactional
+@SpringBootTest
+@Transactional
 class PostServiceTest {
 
     @Autowired

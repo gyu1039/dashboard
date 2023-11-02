@@ -77,7 +77,6 @@ public class JwtService {
 
         setAccessTokenHeader(response, accessToken);
         setRefreshTokenHeader(response, refreshToken);
-
     }
 
     public void sendAccessToken(HttpServletResponse response, String accessToken) {

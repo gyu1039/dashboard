@@ -3,7 +3,7 @@ package kig.dashboard.post;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.exception.MemberException;
 import kig.dashboard.member.exception.MemberExceptionType;
-import kig.dashboard.member.login.SecurityUtil;
+import kig.dashboard.global.config.login.SecurityUtil;
 import kig.dashboard.post.cond.PostSearchCondition;
 import kig.dashboard.post.dto.PostInfoDTO;
 import kig.dashboard.post.dto.PostPagingDTO;

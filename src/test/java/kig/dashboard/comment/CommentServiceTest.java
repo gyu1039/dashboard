@@ -37,8 +37,8 @@ import java.util.stream.LongStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-//@SpringBootTest
-//@Transactional
+@SpringBootTest
+@Transactional
 class CommentServiceTest {
 
     @Autowired
@@ -70,7 +70,7 @@ class CommentServiceTest {
         String title = "제목";
         String content = "내용";
 
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, null, Optional.empty());
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.empty());
         Post save = postRepository.save(postSaveDTO.toEntity());
         clear();
 

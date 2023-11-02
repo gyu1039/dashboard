@@ -4,6 +4,8 @@ import kig.dashboard.global.config.login.JwtService;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
@@ -11,6 +13,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -18,8 +22,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
@@ -27,25 +33,21 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
-    private final String NO_CHECK_URL = "/login";
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        if(request.getRequestURI().equals(NO_CHECK_URL)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         String refreshToken = jwtService.extractRefreshToken(request)
                 .filter(jwtService::isTokenValid)
                 .orElse(null);
+
+        log.info("{}", refreshToken);
 
         if (refreshToken != null) {
             checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
             return;
         }
 
+        log.info("{}", "이곳에 진입했어");
         checkAccessTokenAndAuthentication(request, response, filterChain);
     }
 
@@ -65,7 +67,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         UserDetails user = User.builder()
                 .username(member.getUsername())
                 .password(member.getPassword())
-                .roles(member.getRole().name())
+                .roles(member.getRoles().toArray(String[]::new))
                 .build();
 
         UsernamePasswordAuthenticationToken authentication =

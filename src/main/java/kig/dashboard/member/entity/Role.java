@@ -1,8 +1,6 @@
 package kig.dashboard.member.entity;
 
 
-import jdk.jfr.BooleanFlag;
-import kig.dashboard.member.MemberRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

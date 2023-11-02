@@ -1,4 +1,4 @@
-package kig.dashboard.member.login;
+package kig.dashboard.global.config.login;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

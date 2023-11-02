@@ -33,8 +33,8 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
         );
 
         log.info("로그인에 성공합니다. username: {}", username);
-        log.info("AccessToken을 발급합니다. AccessToken: {}", accessToken);
-        log.info("RefreshToken을 발급합니다. RefreshToken: {}", refreshToken);
+        log.info("AccessToken: {}", accessToken);
+        log.info("RefreshToken: {}", refreshToken);
     }
 
     private String extractUsername(Authentication authentication) {
