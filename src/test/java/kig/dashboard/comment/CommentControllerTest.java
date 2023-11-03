@@ -113,7 +113,7 @@ class CommentControllerTest {
     private Long savePost() {
         String title = "제목";
         String content = "내용";
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, null, Optional.empty());
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.empty());
 
         Post save = postRepository.save(postSaveDTO.toEntity());
         clear();

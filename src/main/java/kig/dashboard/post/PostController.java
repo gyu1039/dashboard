@@ -11,12 +11,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @Slf4j
@@ -28,8 +27,7 @@ public class PostController {
     private int size;
 
     @GetMapping("/posts")
-    public ResponseEntity<?> postList(@RequestParam(defaultValue = "0") int page) {
-
+    public ResponseEntity<?> postList(@RequestParam(defaultValue = "0", name = "page") int page) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
         return ResponseEntity.ok(postService.getList(pageRequest));

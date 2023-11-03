@@ -3,6 +3,7 @@ package kig.dashboard.post.dto;
 import kig.dashboard.post.entity.Post;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
+@Slf4j
 public class PostPagingDTO {
 
     private int totalPageCount;
@@ -26,8 +28,6 @@ public class PostPagingDTO {
         this.totalElementCount = searchResults.getTotalElements();
         this.currentPageElementCount = searchResults.getNumberOfElements();
         this.simpleDTOList = searchResults.getContent().stream().map(SimplePostInfo::new).collect(Collectors.toList());
-        
-
 
     }
 }

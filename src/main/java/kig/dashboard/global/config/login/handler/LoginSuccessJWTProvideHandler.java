@@ -26,7 +26,7 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
         String accessToken = jwtService.createAccessToken(username);
         String refreshToken = jwtService.createRefreshToken();
 
-        jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
+        jwtService.sendAccessAndRefreshToken(response, accessToken,refreshToken);
 
         memberRepository.findByUsername(username).ifPresent(
                 member -> member.updateRefreshToken(refreshToken)
@@ -34,7 +34,6 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
 
         log.info("로그인에 성공합니다. username: {}", username);
         log.info("AccessToken: {}", accessToken);
-        log.info("RefreshToken: {}", refreshToken);
     }
 
     private String extractUsername(Authentication authentication) {

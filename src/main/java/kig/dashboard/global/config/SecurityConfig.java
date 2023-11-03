@@ -20,6 +20,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 @RequiredArgsConstructor
@@ -42,8 +43,8 @@ public class SecurityConfig {
                 .and()
                 .addFilter(corsConfig.corsFilter())
                 .authorizeRequests()
-                .antMatchers("/js/**").permitAll()
-                .antMatchers("/api/signup", "/api/checkid/**").permitAll()
+//                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .antMatchers("/api/login", "/api/signup", "/api/checkid/**").permitAll()
                 .anyRequest().authenticated()
         ;
 

@@ -2,6 +2,7 @@ package kig.dashboard.global.config.login;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import lombok.AccessLevel;
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Transactional
@@ -45,6 +48,7 @@ public class JwtService {
     private static final String BEARER = "Bearer ";
 
     private final MemberRepository memberRepository;
+    private final ObjectMapper objectMapper;
 
     public String createAccessToken(String username) {
         return JWT.create()
@@ -75,15 +79,26 @@ public class JwtService {
 
         response.setStatus(HttpServletResponse.SC_OK);
 
+        Map<String, String> ret = new HashMap<>();
+        ret.put("accessToken", accessToken);
+        ret.put("refreshToken", refreshToken);
+
+        response.getWriter().write(objectMapper.writeValueAsString(ret));
+
+        /*
         setAccessTokenHeader(response, accessToken);
         setRefreshTokenHeader(response, refreshToken);
+        */
     }
 
-    public void sendAccessToken(HttpServletResponse response, String accessToken) {
+    public void sendAccessToken(HttpServletResponse response, String accessToken) throws IOException {
 
         response.setStatus(HttpServletResponse.SC_OK);
 
-        setAccessTokenHeader(response, accessToken);
+        Map<String, String> ret = new HashMap<>();
+        ret.put("accessToken", accessToken);
+
+        response.getWriter().write(objectMapper.writeValueAsString(ret));
     }
 
     public Optional<String> extractAccessToken(HttpServletRequest request) {

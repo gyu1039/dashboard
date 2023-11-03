@@ -39,8 +39,9 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
 
+        log.info("attemptAuthentication, header: Authorization - {}", request.getHeader("Authorization"));
         if(request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)) {
-            log.info("{}", "여기서 에러가 발생하는구나");
+            log.info("{}", "Authentication Content-Type not supported");
             throw new AuthenticationServiceException("Authentication Content-Type not supported: " + request.getContentType());
         }
 
@@ -55,7 +56,6 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
 
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
-        log.info("{}", this.getAuthenticationManager());
         return this.getAuthenticationManager().authenticate(authRequest);
     }
 }

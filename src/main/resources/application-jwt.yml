@@ -2,10 +2,10 @@ jwt:
   secret: ingyu
 
   access:
-    expiration: 1800
-    header: authorization
+    expiration: 1800000
+    header: Authorization
 
 
   refresh:
-    expiration: 1209600
+    expiration: 1209600000
     header: Authorization-refresh
