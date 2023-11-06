@@ -22,18 +22,16 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
 
+        log.info("LoginSuccessJWTProvideHandler 실행 ");
         String username = extractUsername(authentication);
+        log.info("username : {}",username);
         String accessToken = jwtService.createAccessToken(username);
         String refreshToken = jwtService.createRefreshToken();
 
-        jwtService.sendAccessAndRefreshToken(response, accessToken,refreshToken);
-
         memberRepository.findByUsername(username).ifPresent(
-                member -> member.updateRefreshToken(refreshToken)
+                member -> member.setRefreshToken(refreshToken)
         );
-
-        log.info("로그인에 성공합니다. username: {}", username);
-        log.info("AccessToken: {}", accessToken);
+        jwtService.addTokenToBody(response, accessToken, refreshToken);
     }
 
     private String extractUsername(Authentication authentication) {

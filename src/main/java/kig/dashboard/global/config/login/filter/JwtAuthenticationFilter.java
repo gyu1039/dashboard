@@ -1,43 +1,47 @@
 package kig.dashboard.global.config.login.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kig.dashboard.global.config.login.LoginService;
+import kig.dashboard.member.dto.MemberLoginDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 @Slf4j
-public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private static final String DEFAULT_LOGIN_REQUEST_URL = "/api/login";
     private static final String HTTP_METHOD = "POST";
     private static final String CONTENT_TYPE = "application/json; charset=UTF-8";
-    private static final String USERNAME_KEY = "username";
-    private static final String PASSWORD_KEY = "password";
+
 
     private static final AntPathRequestMatcher DEFAULT_LOGIN_PATH_REQUEST_MATCH
             = new AntPathRequestMatcher(DEFAULT_LOGIN_REQUEST_URL, HTTP_METHOD);
 
-    private final ObjectMapper objectMapper;
 
-    public JsonUsernamePasswordAuthenticationFilter(ObjectMapper objectMapper) {
+    public JwtAuthenticationFilter() {
         super(DEFAULT_LOGIN_PATH_REQUEST_MATCH);
-        this.objectMapper = objectMapper;
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
 
         log.info("attemptAuthentication, header: Authorization - {}", request.getHeader("Authorization"));
         if(request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)) {
@@ -45,17 +49,18 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
             throw new AuthenticationServiceException("Authentication Content-Type not supported: " + request.getContentType());
         }
 
+        ObjectMapper objectMapper = new ObjectMapper();
         String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
-        log.info("{}", messageBody);
-        Map<String, String> usernamePasswordMap = objectMapper.readValue(messageBody, Map.class);
+        MemberLoginDTO member = objectMapper.readValue(messageBody, MemberLoginDTO.class);
 
-        String username = usernamePasswordMap.get(USERNAME_KEY);
-        String password = usernamePasswordMap.get(PASSWORD_KEY);
-        log.info("{}", username);
-        log.info("{}", password);
+        log.info("{}", member);
 
+        UsernamePasswordAuthenticationToken authenticationToken
+                = new UsernamePasswordAuthenticationToken(member.getUsername(), member.getPassword());
 
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
-        return this.getAuthenticationManager().authenticate(authRequest);
+        SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
+        emptyContext.setAuthentication(authenticationToken);
+
+        return this.getAuthenticationManager().authenticate(authenticationToken);
     }
 }

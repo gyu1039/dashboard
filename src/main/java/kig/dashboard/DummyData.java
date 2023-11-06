@@ -42,9 +42,7 @@ public class DummyData {
 
         private final MemberRepository memberRepository;
         private final PostRepository postRepository;
-        private final CommentRepository commentRepository;
         private final GroupRepository groupRepository;
-        private final RoleRepository roleRepository;
         private final PasswordEncoder passwordEncoder;
 
         @Transactional

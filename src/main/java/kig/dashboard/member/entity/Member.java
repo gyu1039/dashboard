@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED) @AllArgsConstructor @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED) @Builder @AllArgsConstructor
 @Entity @Table(name = "members")
 public class Member extends BaseTimeEntity {
 
@@ -52,6 +52,7 @@ public class Member extends BaseTimeEntity {
     @ManyToOne
     private Group group;
 
+
     public List<String> getRoles() {
         return roleMembers.stream().map((e) -> e.getRole().getName()).collect(Collectors.toList());
     }
@@ -76,7 +77,7 @@ public class Member extends BaseTimeEntity {
         this.nickname = nickname;
     }
 
-    public void updateRefreshToken(String refreshToken) {
+    public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
 

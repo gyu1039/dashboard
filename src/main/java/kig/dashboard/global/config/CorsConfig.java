@@ -22,7 +22,7 @@ public class CorsConfig {
         config.setAllowedOrigins(List.of("http://localhost:3000/"));
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.setExposedHeaders(Arrays.asList("Authorization", "Authorization-refresh"));
+//        config.setExposedHeaders(Arrays.asList("Authorization", "Authorization-refresh"));
         source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source);

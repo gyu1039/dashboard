@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
@@ -42,13 +41,13 @@ public class JwtService {
     @Value("${jwt.refresh.header}")
     private String refreshHeader;
 
+
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String USERNAME_CLAIM = "username";
     private static final String BEARER = "Bearer ";
 
     private final MemberRepository memberRepository;
-    private final ObjectMapper objectMapper;
 
     public String createAccessToken(String username) {
         return JWT.create()
@@ -65,67 +64,26 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secret));
     }
 
-    public void updateRefreshToken(String username, String refreshToken) {
-
-        memberRepository.findByUsername(username).ifPresent(member -> member.updateRefreshToken(refreshToken));
-    }
-
     public void destroyRefreshToken(String username) {
-
         memberRepository.findByUsername(username).ifPresent(Member::destroyRefreshToken);
     }
 
-    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
+
+    public void addTokenToBody(HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
 
         response.setStatus(HttpServletResponse.SC_OK);
 
-        Map<String, String> ret = new HashMap<>();
-        ret.put("accessToken", accessToken);
-        ret.put("refreshToken", refreshToken);
-
-        response.getWriter().write(objectMapper.writeValueAsString(ret));
-
-        /*
-        setAccessTokenHeader(response, accessToken);
-        setRefreshTokenHeader(response, refreshToken);
-        */
-    }
-
-    public void sendAccessToken(HttpServletResponse response, String accessToken) throws IOException {
-
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        Map<String, String> ret = new HashMap<>();
-        ret.put("accessToken", accessToken);
-
-        response.getWriter().write(objectMapper.writeValueAsString(ret));
-    }
-
-    public Optional<String> extractAccessToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(accessHeader))
-                .filter(accessToken -> accessToken.startsWith(BEARER))
-                .map(accessToken -> accessToken.replace(BEARER, ""));
-    }
-
-    public Optional<String> extractRefreshToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(refreshHeader))
-                .filter(refreshToken -> refreshToken.startsWith(BEARER))
-                .map(refreshToken -> refreshToken.replace(BEARER, ""));
-    }
-
-    public Optional<String> extractUsername(String accessToken) {
-
-        return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken).getClaim(USERNAME_CLAIM).asString());
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> map = new HashMap<>();
+        map.put("access", accessToken);
+        map.put("refresh", refreshToken);
+        response.getWriter().print(objectMapper.writeValueAsString(map));
     }
 
 
-    public void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
-        response.setHeader(accessHeader, accessToken);
-    }
+    public String extractUsername(String accessToken) {
 
-
-    public void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
-        response.setHeader(refreshHeader, refreshToken);
+        return JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken).getClaim(USERNAME_CLAIM).asString();
     }
 
     public boolean isTokenValid(String token) {
