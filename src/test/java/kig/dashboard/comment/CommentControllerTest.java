@@ -9,7 +9,6 @@ import kig.dashboard.global.config.login.JwtService;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.MemberService;
 import kig.dashboard.member.entity.Member;
-import kig.dashboard.member.MemberRole;
 import kig.dashboard.post.entity.Post;
 import kig.dashboard.post.repository.PostRepository;
 import kig.dashboard.post.dto.PostSaveDTO;
@@ -82,14 +81,13 @@ class CommentControllerTest {
 
         member = memberRepository.save(Member.builder().username(USERNAME)
                 .password("1234")
-                .nickname("test1").role(MemberRole.USER).build());
+                .nickname("test1").build());
         SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
         emptyContext.setAuthentication(
                 new UsernamePasswordAuthenticationToken(
                         User.builder()
                                 .username(USERNAME)
                                 .password("1234")
-                                .roles(MemberRole.USER.toString())
                                 .build(), null)
         );
 

@@ -1,10 +1,13 @@
 package kig.dashboard.global.config;
 
 import kig.dashboard.global.config.login.JwtService;
+import kig.dashboard.global.config.login.SecurityUtil;
 import kig.dashboard.global.config.login.filter.JwtAuthenticationFilter;
 import kig.dashboard.global.config.login.filter.JwtAuthorizationFilter;
 import kig.dashboard.global.config.login.handler.LoginFailureHandler;
 import kig.dashboard.global.config.login.handler.LoginSuccessJWTProvideHandler;
+import kig.dashboard.global.config.login.handler.MyLogoutSuccessHandler;
+import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.global.config.login.LoginService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -41,11 +45,23 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .authorizeRequests()
+                .antMatchers(new String[]{"/api-docs",
+                        "/swagger-custom-ui.html",
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/api-docs/**",
+                        "/swagger-ui.html"}).permitAll()
+                .and()
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(jwtAuthorizationFilter(), JwtAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/api/login", "/api/signup", "/api/checkid/**").permitAll()
+                .antMatchers("/api/login", "/api/logout", "/api/signup", "/api/checkid/**").permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .logout()
+                .logoutUrl("/api/logout")
+                .logoutSuccessHandler(myLogoutSuccessHandler())
         ;
 
         return http.build();
@@ -100,5 +116,10 @@ public class SecurityConfig {
         filterRegistrationBean.setFilter(new OpenEntityManagerInViewFilter());
         filterRegistrationBean.setOrder(Integer.MIN_VALUE);
         return filterRegistrationBean;
+    }
+
+    @Bean
+    public MyLogoutSuccessHandler myLogoutSuccessHandler() {
+        return new MyLogoutSuccessHandler(memberRepository);
     }
 }

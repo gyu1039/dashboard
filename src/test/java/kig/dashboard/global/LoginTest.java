@@ -1,9 +1,8 @@
-package kig.dashboard.global.login;
+package kig.dashboard.global;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.entity.Member;
-import kig.dashboard.member.MemberRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +61,6 @@ public class LoginTest {
                 .username(USERNAME)
                 .password(passwordEncoder.encode(PASSWORD))
                 .nickname("NickName")
-                .role(MemberRole.USER)
                 .build()
         );
         clear();

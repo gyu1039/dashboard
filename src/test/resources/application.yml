@@ -5,10 +5,21 @@ spring:
     include: jwt
 
   datasource:
-    url: jdbc:h2:tcp//localhost//~/test
+    url: jdbc:h2:~/test
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+
+    hibernate:
+      ddl-auto: create
+    database: h2
 
 
   data:
@@ -23,15 +34,7 @@ spring:
       max-file-size: 2MB
 
 
-  jpa:
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        default_batch_fetch_size: 100
 
-    hibernate:
-      ddl-auto: create
 
     open-in-view: false
 

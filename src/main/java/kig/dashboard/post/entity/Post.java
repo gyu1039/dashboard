@@ -14,15 +14,12 @@ import java.util.List;
 @Entity
 @Table(name = "posts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class Post extends BaseTimeEntity {
 
     @Id @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "category_id")
-//    private Category category;
 
     @Column(length = 40)
     @NotBlank
@@ -40,11 +37,18 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "writer_id")
     private Member writer;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @Builder
-    public Post(String title, String content, Member writer) {
+    public Post(String title, String content, String filePath, Member writer, Category category, List<Comment> commentList) {
         this.title = title;
         this.content = content;
+        this.filePath = filePath;
         this.writer = writer;
+        this.category = category;
+        this.commentList = commentList;
     }
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -63,10 +67,10 @@ public class Post extends BaseTimeEntity {
         commentList.add(comment);
     }
 
-//    public void confirmCategory(Category category) {
-//        this.category = category;
-//        category.addPost(this);
-//    }
+    public void confirmCategory(Category category) {
+        this.category = category;
+        category.addPost(this);
+    }
 
 
     /**
@@ -83,5 +87,11 @@ public class Post extends BaseTimeEntity {
     public void updateFilePath(String filePath) {
         this.filePath = filePath;
     }
+
+    public void updateCategory(Category category) {
+        this.category = category;
+    }
+
+
 
 }

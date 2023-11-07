@@ -42,6 +42,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         log.info("{}", "사용자 권한을 확인합니다");
         log.info("requestUrl {}", request.getRequestURI());
 
+        if(request.getRequestURI().equals("/api/logout")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String accessToken = request.getHeader(accessHeader).replace(BEARER, "");
         String refreshToken = request.getHeader(refreshHeader).replace(BEARER, "");
 
@@ -58,15 +64,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             if(isAccessTokenValid && isRefreshTokenValid) {
 
                 String accessToken1 = jwtService.createAccessToken(member.getUsername());
-                addTokenToBody(request, response, accessToken1, refreshToken, member);
+                addTokenToBody(response, accessToken1, refreshToken, member);
 
             } else if(isAccessTokenValid) {
-                addTokenToBody(request, response, accessToken, refreshToken, member);
+                addTokenToBody(response, accessToken, refreshToken, member);
 
             } else if(isRefreshTokenValid) {
 
                 String accessToken1 = jwtService.createAccessToken(member.getUsername());
-                addTokenToBody(request, response, accessToken1, refreshToken, member);
+                addTokenToBody(response, accessToken1, refreshToken, member);
 
             }
         }
@@ -75,9 +81,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void addTokenToBody(HttpServletRequest request, HttpServletResponse response, String accessToken1, String refreshToken, Member member) throws IOException {
-        jwtService.addTokenToBody(response, accessToken1, refreshToken);
+    private void addTokenToBody(HttpServletResponse response, String accessToken1, String refreshToken, Member member) throws IOException {
 
+        jwtService.addTokenToBody(response, accessToken1, refreshToken);
 
         log.info("JwtAuthorizationFilter.addTokenToHeader 실행");
         UserDetails details = User.builder()

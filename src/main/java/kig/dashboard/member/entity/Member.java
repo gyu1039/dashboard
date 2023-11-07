@@ -2,7 +2,6 @@ package kig.dashboard.member.entity;
 
 import kig.dashboard.comment.Comment;
 import kig.dashboard.global.domain.BaseTimeEntity;
-import kig.dashboard.member.MemberRole;
 import kig.dashboard.member.repository.GroupRepository;
 import kig.dashboard.post.entity.Post;
 import lombok.*;
@@ -92,9 +91,6 @@ public class Member extends BaseTimeEntity {
         return passwordEncoder.matches(checkPassword, getPassword());
     }
 
-    public void addUserAuthority() {
-        this.role = MemberRole.USER;
-    }
 
     /**
      * 연관관계 편의
@@ -109,8 +105,9 @@ public class Member extends BaseTimeEntity {
         commentList.add(comment);
     }
 
-    @Column
-    private MemberRole role;
+    public void addRoleMember(RoleMember roleMember) {
+        roleMembers.add(roleMember);
+    }
 
     public void initGroup(GroupRepository groupRepository) {
         this.group = groupRepository.findByName("기본그룹").orElse(null);

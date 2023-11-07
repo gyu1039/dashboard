@@ -1,4 +1,4 @@
-package kig.dashboard.global.login.filter;
+package kig.dashboard.global.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kig.dashboard.global.config.login.JwtService;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.entity.Member;
-import kig.dashboard.member.MemberRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +78,6 @@ class JwtFilterAuthenticationTest {
         memberRepository.save(
                 Member.builder().username(USERNAME).password(passwordEncoder.encode(PASSWORD))
                         .nickname("test")
-                        .role(MemberRole.USER)
                         .build()
         );
 

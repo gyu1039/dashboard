@@ -7,5 +7,5 @@ jwt:
 
 
   refresh:
-    expiration: 1209600000
+    expiration: 86400000
     header: Authorization-refresh

@@ -51,7 +51,6 @@ class MemberServiceTest {
                 User.builder()
                         .username(memberSignUpDTO.getUsername())
                         .password(memberSignUpDTO.getPassword())
-                        .roles(MemberRole.USER.name())
                         .build(), null, null
         ));
         SecurityContextHolder.setContext(emptyContext);

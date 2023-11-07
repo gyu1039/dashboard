@@ -35,7 +35,6 @@ class MemberRepositoryTest {
                 .nickname("test")
                 .build();
 
-        member.addUserAuthority();
 
         Member savedMember = memberRepository.save(member);
 
@@ -53,7 +52,6 @@ class MemberRepositoryTest {
                 .nickname("test")
                 .build();
 
-        member.addUserAuthority();
 
         assertThrows(Exception.class, () -> {
                 memberRepository.save(member);
@@ -68,8 +66,6 @@ class MemberRepositoryTest {
                 .password("test")
                 .build();
 
-        member.addUserAuthority();
-
         assertThrows(Exception.class, () -> {
             memberRepository.save(member);
         });
@@ -83,7 +79,6 @@ class MemberRepositoryTest {
                 .nickname("test")
                 .build();
 
-        member.addUserAuthority();
 
         assertThrows(Exception.class, () -> {
             memberRepository.save(member);
@@ -92,8 +87,8 @@ class MemberRepositoryTest {
 
     @Test
     public void 회원가입_실패_중복된아이디() throws Exception {
-        Member member1 = Member.builder().username("test").password("12345").nickname("test1").role(MemberRole.USER).build();
-        Member member2 = Member.builder().username("test").password("789").nickname("test2").role(MemberRole.ADMIN).build();
+        Member member1 = Member.builder().username("test").password("12345").nickname("test1").build();
+        Member member2 = Member.builder().username("test").password("789").nickname("test2").build();
 
         memberRepository.save(member1);
 
@@ -106,7 +101,7 @@ class MemberRepositoryTest {
 
         Member member1 = Member.builder()
                 .username("test").password("1234")
-                .nickname("test").role(MemberRole.USER).build();
+                .nickname("test").build();
 
         memberRepository.save(member1);
 
@@ -133,7 +128,6 @@ class MemberRepositoryTest {
         Member member = Member.builder().username("test@gmail.com")
                 .password("1234")
                 .nickname("test")
-                .role(MemberRole.USER)
                 .build();
         memberRepository.save(member);
 
@@ -150,7 +144,6 @@ class MemberRepositoryTest {
         Member member = Member.builder().username("test@gmail.com")
                 .password("1234")
                 .nickname("test")
-                .role(MemberRole.USER)
                 .build();
         memberRepository.save(member);
 
@@ -162,7 +155,7 @@ class MemberRepositoryTest {
     public void findByUserName확인() {
 
         String username = "username";
-        Member member1 = Member.builder().username(username).password("1234567890").role(MemberRole.USER).nickname("NickName1").build();
+        Member member1 = Member.builder().username(username).password("1234567890").nickname("NickName1").build();
         memberRepository.save(member1);
 
 
@@ -179,7 +172,7 @@ class MemberRepositoryTest {
 
         Member member = Member.builder().username("test@gamil.com")
                 .password("1234").nickname("test")
-                .role(MemberRole.USER).build();
+                .build();
 
         memberRepository.save(member);
 

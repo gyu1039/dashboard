@@ -5,9 +5,10 @@ import kig.dashboard.comment.CommentRepository;
 import kig.dashboard.comment.dto.CommentInfoDTO;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.entity.Member;
-import kig.dashboard.member.MemberRole;
 import kig.dashboard.post.dto.PostInfoDTO;
+import kig.dashboard.post.entity.Category;
 import kig.dashboard.post.entity.Post;
+import kig.dashboard.post.repository.CategoryRepository;
 import kig.dashboard.post.repository.PostRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ class PostRepositoryTest {
 
     @Autowired
     CommentRepository commentRepository;
+
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @Autowired
     PostService postService;
@@ -124,5 +128,112 @@ class PostRepositoryTest {
         }
         assertThat(total).isEqualTo(10 * 20 + 10);
     }
+
+
+    @Test
+    public void 카테고리가_추가된_게시글_저장() {
+
+        //given
+        Member member = Member.builder()
+                .nickname("test")
+                .username("test")
+                .password("test")
+                .build();
+        memberRepository.save(member);
+
+
+        Category category = Category.builder()
+                .name("2팀")
+                .build();
+
+        Post post1 = Post.builder()
+                .title("제목입니다1")
+                .content("내용입니다1")
+                .category(category)
+                .writer(member)
+                .build();
+
+        Post post2 = Post.builder()
+                .title("제목입니다2")
+                .content("내용입니다2")
+                .category(category)
+                .writer(member)
+                .build();
+
+        Post post3 = Post.builder()
+                .title("제목입니다3")
+                .content("내용입니다3")
+                .category(category)
+                .writer(member)
+                .build();
+
+        // when
+        category.addPost(post1);
+        category.addPost(post2);
+        category.addPost(post3);
+        categoryRepository.save(category);
+
+
+        // then
+        List<Post> byCategory = postRepository.findByCategory(category);
+        assertThat(byCategory.size()).isEqualTo(3);
+
+    }
+
+
+    @Test
+    public void 카테고리가_추가된_게시글_삭제_카테고리에서_게시글삭제() {
+
+        //given
+        Member member = Member.builder()
+                .nickname("test")
+                .username("test")
+                .password("test")
+                .build();
+        memberRepository.save(member);
+
+
+        Category category = Category.builder()
+                .name("2팀")
+                .build();
+
+        Post post1 = Post.builder()
+                .title("제목입니다1")
+                .content("내용입니다1")
+                .category(category)
+                .writer(member)
+                .build();
+
+        Post post2 = Post.builder()
+                .title("제목입니다2")
+                .content("내용입니다2")
+                .category(category)
+                .writer(member)
+                .build();
+
+        Post post3 = Post.builder()
+                .title("제목입니다3")
+                .content("내용입니다3")
+                .category(category)
+                .writer(member)
+                .build();
+
+        category.addPost(post1);
+        category.addPost(post2);
+        category.addPost(post3);
+        categoryRepository.save(category);
+
+
+        // when
+        assertThat(postRepository.findAll().size()).isEqualTo(3);
+        category.deletePost(post1);
+
+
+        // then
+        assertThat(postRepository.findByCategory(category).size()).isEqualTo(2);
+        assertThat(postRepository.findAll().size()).isEqualTo(3);
+
+    }
+
 
 }

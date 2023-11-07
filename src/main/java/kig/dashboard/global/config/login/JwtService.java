@@ -77,7 +77,7 @@ public class JwtService {
         Map<String, String> map = new HashMap<>();
         map.put("access", accessToken);
         map.put("refresh", refreshToken);
-        response.getWriter().print(objectMapper.writeValueAsString(map));
+        response.getWriter().write(objectMapper.writeValueAsString(map));
     }
 
 

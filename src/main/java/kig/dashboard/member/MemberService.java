@@ -26,7 +26,7 @@ public class MemberService {
     private final GroupRepository groupRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public void signUp(MemberSignUpDTO memberSignUpDTO) throws Exception {
+    public void signUp(MemberSignUpDTO memberSignUpDTO) {
 
         Member member = memberSignUpDTO.toEntity();
 //        member.addUserAuthority();
@@ -40,7 +40,7 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public void update(MemberUpdateDTO memberUpdateDTO) throws Exception {
+    public void update(MemberUpdateDTO memberUpdateDTO) {
 
         Member member = isMemberExists();
         member.updateNickName(memberUpdateDTO.getNickname());
@@ -48,7 +48,7 @@ public class MemberService {
 
 
 
-    public void updatePassword(String checkPassword, String toBePassword) throws Exception {
+    public void updatePassword(String checkPassword, String toBePassword) {
 
         Member member = isMemberExists();
 
@@ -59,7 +59,7 @@ public class MemberService {
         member.updatePassword(passwordEncoder, toBePassword);
     }
 
-    public void withdraw(String checkPassword) throws Exception {
+    public void withdraw(String checkPassword) {
 
         Member member = isMemberExists();
 
@@ -82,7 +82,7 @@ public class MemberService {
         return new MemberInfoDTO(member);
     }
 
-    public MemberInfoDTO getMyInfo() throws Exception {
+    public MemberInfoDTO getMyInfo() {
         Member findMember = isMemberExists();
         return new MemberInfoDTO(findMember);
     }

@@ -9,7 +9,6 @@ import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.MemberService;
 import kig.dashboard.member.dto.MemberSignUpDTO;
 import kig.dashboard.member.entity.Member;
-import kig.dashboard.member.MemberRole;
 import kig.dashboard.member.exception.MemberException;
 import kig.dashboard.member.exception.MemberExceptionType;
 import kig.dashboard.post.entity.Post;
@@ -123,7 +122,6 @@ class CommentServiceTest {
                         User.builder()
                                 .username(USERNAME)
                                 .password(PASSWORD)
-                                .roles(MemberRole.USER.name())
                                 .build(), null)
         );
         SecurityContextHolder.setContext(emptyContext);
@@ -138,7 +136,6 @@ class CommentServiceTest {
                         User.builder()
                                 .username("USERNAME1")
                                 .password("PASSWORD123")
-                                .roles(MemberRole.USER.toString())
                                 .build(),
                         null)
         );

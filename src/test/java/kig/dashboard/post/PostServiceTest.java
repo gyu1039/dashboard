@@ -3,7 +3,6 @@ package kig.dashboard.post;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.MemberService;
 import kig.dashboard.member.dto.MemberSignUpDTO;
-import kig.dashboard.member.MemberRole;
 import kig.dashboard.post.dto.PostSaveDTO;
 import kig.dashboard.post.dto.PostUpdateDTO;
 import kig.dashboard.post.entity.Post;
@@ -77,7 +76,6 @@ class PostServiceTest {
                         User.builder()
                                 .username(USERNAME)
                                 .password(PASSWORD)
-                                .roles(MemberRole.USER.name())
                                 .build(), null)
                 );
         SecurityContextHolder.setContext(emptyContext);
@@ -243,7 +241,6 @@ class PostServiceTest {
                         User.builder()
                                 .username(USERNAME+"123")
                                 .password(PASSWORD)
-                                .roles(MemberRole.USER.name())
                                 .build(),
                         null)
         );

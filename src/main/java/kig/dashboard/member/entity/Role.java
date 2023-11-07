@@ -1,10 +1,7 @@
 package kig.dashboard.member.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,13 +9,14 @@ import java.util.List;
 
 @Entity
 @Getter @NoArgsConstructor @AllArgsConstructor @Builder
+@EqualsAndHashCode(of = {"name"})
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true)
     private String name;
 
     @Builder.Default

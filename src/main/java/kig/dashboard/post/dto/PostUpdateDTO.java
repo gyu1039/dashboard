@@ -13,7 +13,11 @@ public class PostUpdateDTO {
 
     @Builder.Default
     private Optional<String> title = Optional.empty();
+
+    @Builder.Default
     private Optional<String> content  = Optional.empty();
+
+    @Builder.Default
     private Optional<MultipartFile> uploadFile  = Optional.empty();
 
 
