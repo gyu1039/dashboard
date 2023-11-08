@@ -27,7 +27,7 @@ public class LoginService implements UserDetailsService {
         return User.builder()
                 .username(member.getUsername())
                 .password(member.getPassword())
-                .roles(member.getRoles().toArray(String[]::new))
+                .roles(member.getRole().name())
                 .build();
     }
 

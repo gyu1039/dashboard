@@ -2,6 +2,7 @@ package kig.dashboard.member.entity;
 
 import kig.dashboard.comment.Comment;
 import kig.dashboard.global.domain.BaseTimeEntity;
+import kig.dashboard.member.MemberRole;
 import kig.dashboard.post.entity.Post;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,6 +46,10 @@ public class Member extends BaseTimeEntity {
     @Builder.Default
     @OneToMany(mappedBy = "member")
     private List<RoleMember> roleMembers = new ArrayList<>();
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private MemberRole role;
 
 //    @JoinColumn
 //    @ManyToOne
@@ -120,4 +125,7 @@ public class Member extends BaseTimeEntity {
     }
 
 
+    public void addUserAuthority() {
+        this.role = MemberRole.USER;
+    }
 }

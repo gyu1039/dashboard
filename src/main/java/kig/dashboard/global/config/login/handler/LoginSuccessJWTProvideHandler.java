@@ -2,6 +2,7 @@ package kig.dashboard.global.config.login.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kig.dashboard.global.config.login.JwtService;
+import kig.dashboard.member.MemberRole;
 import kig.dashboard.member.dto.MemberAuthorizationDTO;
 import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.repository.MemberRepository;
@@ -34,16 +35,8 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
 
         Member member = memberRepository.findByUsername(username).get();
         member.setRefreshToken(refreshToken);
-        jwtService.addTokenToBody(response, accessToken, refreshToken);
+        jwtService.addTokenToBody(response, accessToken, refreshToken, member);
 
-
-        MemberAuthorizationDTO memberDTO = new MemberAuthorizationDTO();
-        memberDTO.setRole("임시");
-        memberDTO.setUsername(member.getUsername());
-
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        response.getWriter().write(objectMapper.writeValueAsString(memberDTO));
     }
 
     private String extractUsername(Authentication authentication) {

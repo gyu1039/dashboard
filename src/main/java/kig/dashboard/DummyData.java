@@ -5,8 +5,6 @@ import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.entity.Role;
 import kig.dashboard.member.entity.RoleMember;
 import kig.dashboard.member.repository.MemberRepository;
-import kig.dashboard.member.repository.RoleMemberRepository;
-import kig.dashboard.member.repository.RoleRepository;
 import kig.dashboard.post.entity.Category;
 import kig.dashboard.post.entity.Post;
 import kig.dashboard.post.repository.CategoryRepository;
@@ -25,7 +23,7 @@ import java.util.stream.IntStream;
 import static java.lang.String.format;
 
 
-@Component
+//@Component
 @RequiredArgsConstructor
 public class DummyData {
 
@@ -51,63 +49,6 @@ public class DummyData {
         public void save() {
 
 
-
-            Member member = Member.builder()
-                    .username("test1")
-                    .password(passwordEncoder.encode("test"))
-                    .nickname("nickname2")
-                    .build();
-
-            Role user = Role.builder().name("팀원").build();
-            RoleMember roleMember1 = RoleMember.builder()
-                    .role(user)
-                    .member(member)
-                    .build();
-            member.addRoleMember(roleMember1);
-            memberRepository.save(member);
-
-
-            Member adminUser = Member.builder()
-                    .username("admin@gmail.com")
-                    .password(passwordEncoder.encode("pass"))
-                    .nickname("nickname1")
-                    .build();
-
-            Role admin = Role.builder().name("관리자").build();
-            RoleMember adminRole = RoleMember.builder()
-                    .role(admin)
-                    .member(adminUser)
-                    .build();
-            adminUser.addRoleMember(adminRole);
-            memberRepository.save(adminUser);
-
-
-            Category free = Category.builder()
-                    .name("자유게시판")
-                    .build();
-
-            Category notice = Category.builder()
-                    .name("공지사항")
-                    .build();
-
-            categoryRepository.save(free);
-            categoryRepository.save(notice);
-
-            List<Member> list = new ArrayList<>(List.of(member));
-
-            IntStream.rangeClosed(1, 20).forEach((idx) -> {
-
-                Post post = Post.builder().title(format("게시글 %s", idx)).content(format("내용 %s", idx)).category(free).build();
-                post.confirmWriter(Objects.requireNonNull(memberRepository.findById(list.get(0).getId()).orElse(null)));
-                postRepository.save(post);
-            });
-
-            IntStream.rangeClosed(1, 3).forEach((idx) -> {
-
-                Post post = Post.builder().title(format("공지사항 %s", idx)).content(format("공지사항 내용 %s", idx)).category(notice).build();
-                post.confirmWriter(Objects.requireNonNull(memberRepository.findById(adminUser.getId()).orElse(null)));
-                postRepository.save(post);
-            });
 
         }
 

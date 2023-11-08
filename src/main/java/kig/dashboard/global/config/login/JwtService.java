@@ -69,7 +69,7 @@ public class JwtService {
     }
 
 
-    public void addTokenToBody(HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
+    public void addTokenToBody(HttpServletResponse response, String accessToken, String refreshToken, Member member) throws IOException {
 
         response.setStatus(HttpServletResponse.SC_OK);
 
@@ -77,6 +77,7 @@ public class JwtService {
         Map<String, String> map = new HashMap<>();
         map.put("access", accessToken);
         map.put("refresh", refreshToken);
+        map.put("role", member.getRole().name());
         response.getWriter().write(objectMapper.writeValueAsString(map));
     }
 

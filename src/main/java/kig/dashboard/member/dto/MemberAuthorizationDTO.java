@@ -8,5 +8,4 @@ public class MemberAuthorizationDTO {
     private String username;
     private String role;
 
-
 }

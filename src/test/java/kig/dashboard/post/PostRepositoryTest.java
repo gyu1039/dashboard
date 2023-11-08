@@ -3,6 +3,7 @@ package kig.dashboard.post;
 import kig.dashboard.comment.Comment;
 import kig.dashboard.comment.CommentRepository;
 import kig.dashboard.comment.dto.CommentInfoDTO;
+import kig.dashboard.member.MemberRole;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import kig.dashboard.post.dto.PostInfoDTO;

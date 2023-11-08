@@ -49,6 +49,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(jwtAuthorizationFilter(), JwtAuthenticationFilter.class)
                 .authorizeRequests()
+                .antMatchers("/api/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()
@@ -62,7 +63,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web -> web.ignoring()
-                .antMatchers("/api/login", "/api/signup", "/api/checkid/**"));
+                .antMatchers("/api/checkid/**",  "/api/signup"));
     }
 
 

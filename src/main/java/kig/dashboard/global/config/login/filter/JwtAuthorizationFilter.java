@@ -78,13 +78,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private void addTokenToBody(HttpServletResponse response, String accessToken1, String refreshToken, Member member) throws IOException {
 
-        jwtService.addTokenToBody(response, accessToken1, refreshToken);
+        jwtService.addTokenToBody(response, accessToken1, refreshToken, member);
 
         log.info("JwtAuthorizationFilter.addTokenToHeader 실행");
         UserDetails details = User.builder()
                 .username(member.getUsername())
                 .password(member.getPassword())
-                .roles(member.getRoles().toArray(String[]::new))
+                .roles(member.getRole().name())
                 .build();
         Authentication authentication = new UsernamePasswordAuthenticationToken(details, null, details.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
