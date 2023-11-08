@@ -23,7 +23,7 @@ public class SimplePostInfo {
         this.content = post.getContent();
         this.writerName = post.getWriter().getUsername();
         this.createdDate = post.getCreatedDate().toString();
-        this.group = post.getWriter().getGroup().getName();
+//        this.group = post.getWriter().getGroup().getName();
 //        this.role = post.getWriter().getRole().name();
     }
 }

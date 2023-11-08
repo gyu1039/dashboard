@@ -42,11 +42,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         log.info("{}", "사용자 권한을 확인합니다");
         log.info("requestUrl {}", request.getRequestURI());
 
-        if(request.getRequestURI().equals("/api/logout")) {
-
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         String accessToken = request.getHeader(accessHeader).replace(BEARER, "");
         String refreshToken = request.getHeader(refreshHeader).replace(BEARER, "");

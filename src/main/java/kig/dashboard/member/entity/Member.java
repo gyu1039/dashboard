@@ -2,7 +2,6 @@ package kig.dashboard.member.entity;
 
 import kig.dashboard.comment.Comment;
 import kig.dashboard.global.domain.BaseTimeEntity;
-import kig.dashboard.member.repository.GroupRepository;
 import kig.dashboard.post.entity.Post;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,22 +46,33 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private List<RoleMember> roleMembers = new ArrayList<>();
 
-    @JoinColumn
-    @ManyToOne
-    private Group group;
+//    @JoinColumn
+//    @ManyToOne
+//    private Group group;
 
 
-    public List<String> getRoles() {
-        return roleMembers.stream().map((e) -> e.getRole().getName()).collect(Collectors.toList());
-    }
-
+    /*
     public void setGroup(Group group) {
         this.group = group;
         group.getMemberList().add(this);
     }
 
+    public void initGroup(GroupRepository groupRepository) {
+        this.group = groupRepository.findByName("기본그룹").orElse(null);
+
+        if(group != null) {
+            group.getMemberList().add(this);
+        }
+
+    }
+
+    */
     public void encodePassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
+    }
+
+    public List<String> getRoles() {
+        return roleMembers.stream().map((e) -> e.getRole().getName()).collect(Collectors.toList());
     }
 
     /**
@@ -109,12 +119,5 @@ public class Member extends BaseTimeEntity {
         roleMembers.add(roleMember);
     }
 
-    public void initGroup(GroupRepository groupRepository) {
-        this.group = groupRepository.findByName("기본그룹").orElse(null);
 
-        if(group != null) {
-            group.getMemberList().add(this);
-        }
-
-    }
 }

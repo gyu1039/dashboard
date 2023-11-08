@@ -19,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -45,18 +46,9 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests()
-                .antMatchers(new String[]{"/api-docs",
-                        "/swagger-custom-ui.html",
-                        "/v3/api-docs/**",
-                        "/swagger-ui/**",
-                        "/api-docs/**",
-                        "/swagger-ui.html"}).permitAll()
-                .and()
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(jwtAuthorizationFilter(), JwtAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/api/login", "/api/logout", "/api/signup", "/api/checkid/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()
@@ -68,6 +60,12 @@ public class SecurityConfig {
     }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web -> web.ignoring()
+                .antMatchers("/api/login", "/api/signup", "/api/checkid/**"));
+    }
+
+
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter();
 
@@ -78,12 +76,12 @@ public class SecurityConfig {
         return jwtAuthenticationFilter;
     }
 
-    @Bean
+
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
         return new JwtAuthorizationFilter(jwtService, memberRepository);
     }
 
-    @Bean
+
     public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());

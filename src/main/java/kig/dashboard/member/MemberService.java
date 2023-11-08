@@ -7,7 +7,7 @@ import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.exception.MemberException;
 import kig.dashboard.member.exception.MemberExceptionType;
 import kig.dashboard.global.config.login.SecurityUtil;
-import kig.dashboard.member.repository.GroupRepository;
+
 import kig.dashboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,14 +23,12 @@ import javax.transaction.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final GroupRepository groupRepository;
     private final PasswordEncoder passwordEncoder;
 
     public void signUp(MemberSignUpDTO memberSignUpDTO) {
 
         Member member = memberSignUpDTO.toEntity();
 //        member.addUserAuthority();
-        member.initGroup(groupRepository);
         member.encodePassword(passwordEncoder);
 
         if (memberRepository.findByUsername(memberSignUpDTO.getUsername()).isPresent()) {

@@ -34,8 +34,6 @@ spring:
       max-file-size: 2MB
 
 
-
-
     open-in-view: false
 
   h2:
