@@ -1,15 +1,13 @@
 package kig.dashboard.global.config;
 
 import kig.dashboard.global.config.login.JwtService;
-import kig.dashboard.global.config.login.SecurityUtil;
+import kig.dashboard.global.config.login.LoginService;
 import kig.dashboard.global.config.login.filter.JwtAuthenticationFilter;
 import kig.dashboard.global.config.login.filter.JwtAuthorizationFilter;
 import kig.dashboard.global.config.login.handler.LoginFailureHandler;
 import kig.dashboard.global.config.login.handler.LoginSuccessJWTProvideHandler;
 import kig.dashboard.global.config.login.handler.MyLogoutSuccessHandler;
-import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.repository.MemberRepository;
-import kig.dashboard.global.config.login.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +19,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -63,7 +60,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web -> web.ignoring()
-                .antMatchers("/api/checkid/**",  "/api/signup"));
+                .antMatchers("/api/checkid/**",  "/api/signup",  "/api/refresh"));
     }
 
 

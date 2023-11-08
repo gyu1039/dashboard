@@ -6,7 +6,6 @@ import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,11 +27,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
 
-    @Value("${jwt.access.header}")
-    private String accessHeader;
-
-    @Value("${jwt.refresh.header}")
-    private String refreshHeader;
 
     private static final String BEARER = "Bearer ";
 
@@ -42,9 +36,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         log.info("{}", "사용자 권한을 확인합니다");
         log.info("requestUrl {}", request.getRequestURI());
 
-
-        String accessToken = request.getHeader(accessHeader).replace(BEARER, "");
-        String refreshToken = request.getHeader(refreshHeader).replace(BEARER, "");
+        String accessToken = request.getHeader("Authorization").replace(BEARER, "");
+        String refreshToken = request.getHeader("Authorization-refresh").replace(BEARER, "");
 
         boolean isAccessTokenValid = jwtService.isTokenValid(accessToken);
         boolean isRefreshTokenValid = jwtService.isTokenValid(refreshToken);
@@ -52,22 +45,23 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         log.info("accessToken : {}, refreshToken: {}", accessToken, refreshToken);
         log.info("isAccessTokenValid: {}, isRefreshTokenValid: {}", isAccessTokenValid, isRefreshTokenValid);
 
-        String username = jwtService.extractUsername(accessToken);
-        if(username != null) {
-            Member member = memberRepository.findByUsername(username).get();
+        Optional<Member> byRefreshToken = memberRepository.findByRefreshToken(refreshToken);
+
+        if(byRefreshToken.isPresent()) {
+            Member member = byRefreshToken.get();
 
             if(isAccessTokenValid && isRefreshTokenValid) {
 
                 String accessToken1 = jwtService.createAccessToken(member.getUsername());
-                addTokenToBody(response, accessToken1, refreshToken, member);
+                addTokenToHeader(response, accessToken1, refreshToken, member);
 
             } else if(isAccessTokenValid) {
-                addTokenToBody(response, accessToken, refreshToken, member);
+                addTokenToHeader(response, accessToken, refreshToken, member);
 
             } else if(isRefreshTokenValid) {
 
                 String accessToken1 = jwtService.createAccessToken(member.getUsername());
-                addTokenToBody(response, accessToken1, refreshToken, member);
+                addTokenToHeader(response, accessToken1, refreshToken, member);
 
             }
         }
@@ -76,9 +70,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void addTokenToBody(HttpServletResponse response, String accessToken1, String refreshToken, Member member) throws IOException {
+    private void addTokenToHeader(HttpServletResponse response, String accessToken1, String refreshToken, Member member) throws IOException {
 
-        jwtService.addTokenToBody(response, accessToken1, refreshToken, member);
+        jwtService.addTokenToHeader(response, accessToken1, refreshToken, member);
 
         log.info("JwtAuthorizationFilter.addTokenToHeader 실행");
         UserDetails details = User.builder()

@@ -37,7 +37,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
 
-        log.info("attemptAuthentication, header: Authorization - {}", request.getHeader("Authorization"));
         if(request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)) {
             log.info("{}", "Authentication Content-Type not supported");
             throw new AuthenticationServiceException("Authentication Content-Type not supported: " + request.getContentType());

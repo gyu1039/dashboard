@@ -2,7 +2,6 @@ package kig.dashboard.global.config.login;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.entity.Member;
 import lombok.AccessLevel;
@@ -16,9 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -69,22 +65,24 @@ public class JwtService {
     }
 
 
-    public void addTokenToBody(HttpServletResponse response, String accessToken, String refreshToken, Member member) throws IOException {
+    public void addTokenToHeader(HttpServletResponse response, String accessToken, String refreshToken, Member member) throws IOException {
 
         response.setStatus(HttpServletResponse.SC_OK);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, String> map = new HashMap<>();
-        map.put("access", accessToken);
-        map.put("refresh", refreshToken);
-        map.put("role", member.getRole().name());
-        response.getWriter().write(objectMapper.writeValueAsString(map));
+        response.setHeader("refresh", refreshToken);
+        response.setHeader("role", member.getRole().name());
+        response.setHeader("access", accessToken);
     }
 
 
     public String extractUsername(String accessToken) {
 
-        return JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken).getClaim(USERNAME_CLAIM).asString();
+        String ret = null;
+        try {
+            ret = JWT.require(Algorithm.HMAC512(secret)).build().verify(accessToken).getClaim(USERNAME_CLAIM).asString();
+        } catch (Exception e) {
+            log.error("유효하지 않은 Token입니다.{}", e.getMessage());
+        }
+        return ret;
     }
 
     public boolean isTokenValid(String token) {
@@ -92,7 +90,7 @@ public class JwtService {
             JWT.require(Algorithm.HMAC512(secret)).build().verify(token);
             return true;
         } catch (Exception e) {
-            log.error("유효하지 않은 Token입니다.{}", e.getMessage());
+            log.error("유효하지 않은 Token입니다. {}", e.getMessage());
             return false;
         }
 

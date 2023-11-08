@@ -35,13 +35,13 @@ public class PostController {
 
     @PostMapping("/posts")
     @ResponseStatus(HttpStatus.CREATED)
-    public void savePost(@Valid @ModelAttribute PostSaveDTO postSaveDTO) throws MemberException {
-        log.info("{}", postSaveDTO.toString());
+    public void savePost(@Valid @RequestBody PostSaveDTO postSaveDTO) throws MemberException {
+        log.info("savePost: {}", postSaveDTO.toString());
         postService.save(postSaveDTO);
     }
 
     @PutMapping("/posts/{postId}")
-    public void updatePost(@PathVariable Long postId, @ModelAttribute PostUpdateDTO postUpdateDTO) {
+    public void updatePost(@PathVariable Long postId, @RequestBody PostUpdateDTO postUpdateDTO) {
         postService.update(postId, postUpdateDTO);
     }
 

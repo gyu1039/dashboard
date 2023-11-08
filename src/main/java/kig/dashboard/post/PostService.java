@@ -16,10 +16,14 @@ import kig.dashboard.post.file.service.FileService;
 import kig.dashboard.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 
 
 @Service
@@ -35,7 +39,6 @@ public class PostService {
     @Transactional
     public PostPagingDTO getList(Pageable pageable) {
         Page<Post> allByOrderByCreatedDateDesc = postRepository.findAllByOrderByCreatedDateDesc(pageable);
-        log.info("getList-return is null?: {}", allByOrderByCreatedDateDesc == null);
         return new PostPagingDTO(allByOrderByCreatedDateDesc);
     }
 
