@@ -5,6 +5,7 @@ import kig.dashboard.comment.exception.CommentExceptionType;
 import kig.dashboard.comment.dto.CommentSaveDTO;
 import kig.dashboard.comment.dto.CommentUpdateDTO;
 import kig.dashboard.global.exception.BaseExceptionType;
+import kig.dashboard.member.MemberRole;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.MemberService;
 import kig.dashboard.member.dto.MemberSignUpDTO;
@@ -112,7 +113,7 @@ class CommentServiceTest {
     public void signUpAndSetAuthentication() throws Exception {
 
 
-        memberService.signUp(new MemberSignUpDTO(USERNAME, PASSWORD, "test"));
+        memberService.signUp(new MemberSignUpDTO(USERNAME, PASSWORD, "test", MemberRole.USER.name()));
 
         member = memberRepository.findByUsername(USERNAME).orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER));
 
@@ -129,7 +130,7 @@ class CommentServiceTest {
     }
 
     private void anotherSignUpAndSetAuthentication() throws Exception {
-        memberService.signUp(new MemberSignUpDTO("USERNAME1","PASSWORD123","nickName"));
+        memberService.signUp(new MemberSignUpDTO("USERNAME1","PASSWORD123","nickName", MemberRole.USER.name()));
         SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
         emptyContext.setAuthentication(
                 new UsernamePasswordAuthenticationToken(

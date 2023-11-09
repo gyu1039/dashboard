@@ -20,7 +20,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     public void signUp(@Valid @RequestBody MemberSignUpDTO memberSignUpDTO) throws Exception {
-
+        log.info("{}", memberSignUpDTO);
         memberService.signUp(memberSignUpDTO);
     }
 

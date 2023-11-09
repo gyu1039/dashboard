@@ -45,10 +45,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         log.info("accessToken : {}, refreshToken: {}", accessToken, refreshToken);
         log.info("isAccessTokenValid: {}, isRefreshTokenValid: {}", isAccessTokenValid, isRefreshTokenValid);
 
-        Optional<Member> byRefreshToken = memberRepository.findByRefreshToken(refreshToken);
+        Optional<Member> optionalMember = memberRepository.findByRefreshToken(refreshToken);
 
-        if(byRefreshToken.isPresent()) {
-            Member member = byRefreshToken.get();
+        if(optionalMember.isPresent()) {
+            Member member = optionalMember.get();
 
             if(isAccessTokenValid && isRefreshTokenValid) {
 

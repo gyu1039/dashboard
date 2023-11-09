@@ -71,6 +71,7 @@ public class JwtService {
         response.setHeader("refresh", refreshToken);
         response.setHeader("role", member.getRole().name());
         response.setHeader("access", accessToken);
+        response.setHeader("id", member.getUsername());
     }
 
 

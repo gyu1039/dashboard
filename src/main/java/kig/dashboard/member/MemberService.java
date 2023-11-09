@@ -28,7 +28,6 @@ public class MemberService {
     public void signUp(MemberSignUpDTO memberSignUpDTO) {
 
         Member member = memberSignUpDTO.toEntity();
-        member.addUserAuthority();
         member.encodePassword(passwordEncoder);
 
         if (memberRepository.findByUsername(memberSignUpDTO.getUsername()).isPresent()) {

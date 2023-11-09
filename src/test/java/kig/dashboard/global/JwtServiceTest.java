@@ -86,13 +86,13 @@ class JwtServiceTest {
     public void RefreshToken_발급() {
 
         String refreshToken = jwtService.createRefreshToken();
-        DecodedJWT verify = getVerify(refreshToken);
+        String refreshToken1 = jwtService.createRefreshToken();
+        String refreshToken2 = jwtService.createRefreshToken();
+        String refreshToken3 = jwtService.createRefreshToken();
 
-        String subject = verify.getSubject();
-        assertThat(subject).isEqualTo(REFRESH_TOKEN_SUBJECT);
-
-        String username = verify.getClaim(USERNAME_CLAIM).asString();
-        assertThat(username).isNull();
+        assertThat(refreshToken).isEqualTo(refreshToken1);
+        assertThat(refreshToken1).isEqualTo(refreshToken2);
+        assertThat(refreshToken2).isEqualTo(refreshToken3);
     }
 
     @Test

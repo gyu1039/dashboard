@@ -123,9 +123,4 @@ public class Member extends BaseTimeEntity {
     public void addRoleMember(RoleMember roleMember) {
         roleMembers.add(roleMember);
     }
-
-
-    public void addUserAuthority() {
-        this.role = MemberRole.USER;
-    }
 }

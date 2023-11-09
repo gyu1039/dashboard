@@ -1,5 +1,6 @@
 package kig.dashboard.global.config.login.handler;
 
+import kig.dashboard.global.config.login.SecurityUtil;
 import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,7 @@ public class MyLogoutSuccessHandler implements LogoutSuccessHandler {
     @Transactional
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        String refreshToken = request.getParameter("refresh");
-        Optional<Member> byRefreshToken = memberRepository.findByRefreshToken(refreshToken);
-        byRefreshToken.ifPresent(Member::destroyRefreshToken);
+        Optional<Member> member = memberRepository.findByUsername(SecurityUtil.getLoginUsername());
+        member.ifPresent(Member::destroyRefreshToken);
     }
 }
