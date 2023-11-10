@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Entity
-@Table(name = "comments")
+@Entity(name = "comments")
 @NoArgsConstructor(access = AccessLevel.PROTECTED) @Getter
 @Slf4j
 public class Comment extends BaseTimeEntity {

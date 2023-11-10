@@ -33,16 +33,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("{}", "사용자 권한을 확인합니다");
-        log.info("requestUrl {}", request.getRequestURI());
-
         String accessToken = request.getHeader("Authorization").replace(BEARER, "");
         String refreshToken = request.getHeader("Authorization-refresh").replace(BEARER, "");
 
         boolean isAccessTokenValid = jwtService.isTokenValid(accessToken);
         boolean isRefreshTokenValid = jwtService.isTokenValid(refreshToken);
 
-        log.info("accessToken : {}, refreshToken: {}", accessToken, refreshToken);
         log.info("isAccessTokenValid: {}, isRefreshTokenValid: {}", isAccessTokenValid, isRefreshTokenValid);
 
         Optional<Member> optionalMember = memberRepository.findByRefreshToken(refreshToken);

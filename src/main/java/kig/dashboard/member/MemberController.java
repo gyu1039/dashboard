@@ -3,6 +3,9 @@ package kig.dashboard.member;
 import kig.dashboard.member.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,9 @@ import javax.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
+
+    @Value("${spring.data.web.pageable.default-page-size}")
+    private int size;
 
     @PostMapping("/signup")
     public void signUp(@Valid @RequestBody MemberSignUpDTO memberSignUpDTO) throws Exception {
@@ -57,4 +63,12 @@ public class MemberController {
 
         return new ResponseEntity<>(memberService.isIdDuplicated(username), HttpStatus.OK);
     }
+
+    @GetMapping("/members")
+    public ResponseEntity<?> findMembers(@RequestParam(defaultValue = "0", name = "page") int page) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return new ResponseEntity<>(memberService.findMembers(pageRequest), HttpStatus.OK);
+    }
+
+
 }

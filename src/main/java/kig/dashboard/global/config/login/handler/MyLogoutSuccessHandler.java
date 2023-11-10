@@ -23,7 +23,7 @@ public class MyLogoutSuccessHandler implements LogoutSuccessHandler {
     @Transactional
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        Optional<Member> member = memberRepository.findByUsername(SecurityUtil.getLoginUsername());
+        Optional<Member> member = memberRepository.findByRefreshToken(request.getHeader("Authorization"));
         member.ifPresent(Member::destroyRefreshToken);
     }
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +54,14 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secret));
     }
 
+    public String createRefreshToken(Long id) {
+        return JWT.create()
+                .withSubject(REFRESH_TOKEN_SUBJECT)
+                .withClaim("id", id)
+                .withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenExpirationTime))
+                .sign(Algorithm.HMAC512(secret));
+    }
+
     public String createRefreshToken() {
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
@@ -68,9 +77,16 @@ public class JwtService {
     public void addTokenToHeader(HttpServletResponse response, String accessToken, String refreshToken, Member member) throws IOException {
 
         response.setStatus(HttpServletResponse.SC_OK);
+//        ResponseCookie cookie = ResponseCookie.from("refresh", refreshToken)
+//                .maxAge(refreshTokenExpirationTime)
+//                .path("/")
+//                .sameSite("None")
+//                .httpOnly(true)
+//                .build();
+//        response.setHeader("Set-Cookie", cookie.toString());
+        response.setHeader("access", accessToken);
         response.setHeader("refresh", refreshToken);
         response.setHeader("role", member.getRole().name());
-        response.setHeader("access", accessToken);
         response.setHeader("id", member.getUsername());
     }
 
@@ -91,7 +107,7 @@ public class JwtService {
             JWT.require(Algorithm.HMAC512(secret)).build().verify(token);
             return true;
         } catch (Exception e) {
-            log.error("유효하지 않은 Token입니다. {}", e.getMessage());
+            log.error("invalid token: {}", e.getMessage());
             return false;
         }
 

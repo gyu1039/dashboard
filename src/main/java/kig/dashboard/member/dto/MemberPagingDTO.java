@@ -1,6 +1,6 @@
-package kig.dashboard.post.dto;
+package kig.dashboard.member.dto;
 
-import kig.dashboard.post.entity.Post;
+import kig.dashboard.member.entity.Member;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,21 +12,21 @@ import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
-public class PostPagingDTO {
+public class MemberPagingDTO {
 
     private int totalPageCount;
     private int currentPageNum;
     private long totalElementCount;
     private int currentPageElementCount;
 
-    private List<SimplePostInfo> simpleDTOList = new ArrayList<>();
+    private List<MemberInfoDTO> memberList = new ArrayList<>();
 
-    public PostPagingDTO(Page<Post> searchResults) {
+    public MemberPagingDTO(Page<Member> searchResults) {
+
         this.totalPageCount = searchResults.getTotalPages();
         this.currentPageNum = searchResults.getNumber();
         this.totalElementCount = searchResults.getTotalElements();
         this.currentPageElementCount = searchResults.getNumberOfElements();
-        this.simpleDTOList = searchResults.getContent().stream().map(SimplePostInfo::new).collect(Collectors.toList());
-
+        memberList = searchResults.getContent().stream().map(MemberInfoDTO::new).collect(Collectors.toList());
     }
 }

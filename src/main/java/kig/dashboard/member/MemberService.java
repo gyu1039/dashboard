@@ -1,6 +1,7 @@
 package kig.dashboard.member;
 
 import kig.dashboard.member.dto.MemberInfoDTO;
+import kig.dashboard.member.dto.MemberPagingDTO;
 import kig.dashboard.member.dto.MemberSignUpDTO;
 import kig.dashboard.member.dto.MemberUpdateDTO;
 import kig.dashboard.member.entity.Member;
@@ -11,6 +12,8 @@ import kig.dashboard.global.config.login.SecurityUtil;
 import kig.dashboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -86,5 +89,10 @@ public class MemberService {
 
     public boolean isIdDuplicated(String username) {
         return memberRepository.existsByUsername(username);
+    }
+
+    public MemberPagingDTO findMembers(Pageable pageable) {
+
+        return new MemberPagingDTO(memberRepository.findByRoleOrderByIdDesc(MemberRole.USER, pageable));
     }
 }

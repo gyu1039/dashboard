@@ -1,6 +1,7 @@
 package kig.dashboard.global.config.login.handler;
 
 import kig.dashboard.global.config.login.JwtService;
+import kig.dashboard.global.config.login.SecurityUtil;
 import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,19 +25,19 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
 
         log.info("LoginSuccessJWTProvideHandler 실행 ");
-        String username = extractUsername(authentication);
+        String username = SecurityUtil.getLoginUsername();
+        Member member = memberRepository.findByUsername(username).get();
+
+        log.info("{}", member);
+
         String accessToken = jwtService.createAccessToken(username);
-        String refreshToken = jwtService.createRefreshToken();
+        String refreshToken = jwtService.createRefreshToken(member.getId());
 
         log.info("accessToken: {}, refreshToken: {}", accessToken, refreshToken);
-        Member member = memberRepository.findByUsername(username).get();
         member.setRefreshToken(refreshToken);
+
         jwtService.addTokenToHeader(response, accessToken, refreshToken, member);
 
     }
 
-    private String extractUsername(Authentication authentication) {
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
-        return principal.getUsername();
-    }
 }

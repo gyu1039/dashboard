@@ -28,8 +28,7 @@ public class Category extends BaseTimeEntity {
     @OneToMany(mappedBy = "category", cascade = {
             CascadeType.PERSIST,
             CascadeType.REMOVE
-    }
-    )
+    })
     private List<Post> postList = new ArrayList<>();
 
     public void addPost(Post post) {

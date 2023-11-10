@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
+@Entity @Table(name = "role_member")
 @Getter @Builder @NoArgsConstructor @AllArgsConstructor
 public class RoleMember {
 
