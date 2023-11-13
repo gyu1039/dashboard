@@ -125,7 +125,7 @@ class JwtServiceTest {
         String accessToken = jwtService.createAccessToken(username);
         String refreshToken = jwtService.createRefreshToken();
 
-        jwtService.addTokenToHeader(mockHttpServletResponse, accessToken, refreshToken, null);
+        jwtService.addNewRefreshTokenToHeader(mockHttpServletResponse, accessToken, refreshToken, null);
 
         String headerAccessToken = mockHttpServletResponse.getHeader(accessHeader);
         String headerRefreshToken = mockHttpServletResponse.getHeader(refreshHeader);
@@ -137,7 +137,7 @@ class JwtServiceTest {
     private HttpServletRequest setRequest(String accessToken, String refreshToken) throws IOException {
 
         MockHttpServletResponse mockHttpServletResponse = new MockHttpServletResponse();
-        jwtService.addTokenToHeader(mockHttpServletResponse, accessToken, refreshToken, null);
+        jwtService.addNewRefreshTokenToHeader(mockHttpServletResponse, accessToken, refreshToken, null);
 
         String headerAccessToken = mockHttpServletResponse.getHeader(accessHeader);
         String headerRefreshToken = mockHttpServletResponse.getHeader(refreshHeader);

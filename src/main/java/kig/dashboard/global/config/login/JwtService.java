@@ -74,18 +74,19 @@ public class JwtService {
     }
 
 
-    public void addTokenToHeader(HttpServletResponse response, String accessToken, String refreshToken, Member member) throws IOException {
+    public void addNewRefreshTokenToHeader(HttpServletResponse response, String accessToken, String refreshToken, Member member) throws IOException {
 
         response.setStatus(HttpServletResponse.SC_OK);
+        response.setHeader("refresh", refreshToken);
 //        ResponseCookie cookie = ResponseCookie.from("refresh", refreshToken)
 //                .maxAge(refreshTokenExpirationTime)
 //                .path("/")
+////                .secure(true)
 //                .sameSite("None")
 //                .httpOnly(true)
 //                .build();
 //        response.setHeader("Set-Cookie", cookie.toString());
         response.setHeader("access", accessToken);
-        response.setHeader("refresh", refreshToken);
         response.setHeader("role", member.getRole().name());
         response.setHeader("id", member.getUsername());
     }

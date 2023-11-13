@@ -7,7 +7,6 @@ import kig.dashboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +35,7 @@ public class LoginSuccessJWTProvideHandler extends SimpleUrlAuthenticationSucces
         log.info("accessToken: {}, refreshToken: {}", accessToken, refreshToken);
         member.setRefreshToken(refreshToken);
 
-        jwtService.addTokenToHeader(response, accessToken, refreshToken, member);
+        jwtService.addNewRefreshTokenToHeader(response, accessToken, refreshToken, member);
 
     }
 

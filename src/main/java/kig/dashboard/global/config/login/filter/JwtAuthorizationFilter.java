@@ -1,7 +1,6 @@
 package kig.dashboard.global.config.login.filter;
 
 import kig.dashboard.global.config.login.JwtService;
-import kig.dashboard.global.config.login.SecurityUtil;
 import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,7 +34,16 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String accessToken = request.getHeader("Authorization").replace(BEARER, "");
+
         String refreshToken = request.getHeader("Authorization-refresh").replace(BEARER, "");
+//        if(request.getCookies() != null) {
+//            for(Cookie cookie : request.getCookies()) {
+//                if(cookie.getName().equals("refresh")) {
+//                    refreshToken = cookie.getValue();
+//                    break;
+//                }
+//            }
+//        }
 
         boolean isAccessTokenValid = jwtService.isTokenValid(accessToken);
         boolean isRefreshTokenValid = jwtService.isTokenValid(refreshToken);
@@ -52,13 +61,23 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 addTokenToHeader(response, accessToken1, refreshToken, member);
 
             } else if(isAccessTokenValid) {
-                addTokenToHeader(response, accessToken, refreshToken, member);
+
+                response.setHeader("access", accessToken);
+                response.setHeader("role", member.getRole().name());
+                response.setHeader("id", member.getUsername());
+
+                setAuthenticatedUserDetails(member);
 
             } else if(isRefreshTokenValid) {
 
                 String accessToken1 = jwtService.createAccessToken(member.getUsername());
                 addTokenToHeader(response, accessToken1, refreshToken, member);
 
+            } else {
+
+                Cookie cookie = new Cookie("refresh", null);
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
             }
         }
 
@@ -68,9 +87,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private void addTokenToHeader(HttpServletResponse response, String accessToken1, String refreshToken, Member member) throws IOException {
 
-        jwtService.addTokenToHeader(response, accessToken1, refreshToken, member);
-
+        jwtService.addNewRefreshTokenToHeader(response, accessToken1, refreshToken, member);
         log.info("JwtAuthorizationFilter.addTokenToHeader 실행");
+        setAuthenticatedUserDetails(member);
+    }
+
+    private static void setAuthenticatedUserDetails(Member member) {
         UserDetails details = User.builder()
                 .username(member.getUsername())
                 .password(member.getPassword())
