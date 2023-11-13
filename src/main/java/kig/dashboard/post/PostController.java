@@ -6,7 +6,10 @@ import kig.dashboard.post.dto.PostSaveDTO;
 import kig.dashboard.post.dto.PostUpdateDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.net.MalformedURLException;
 
 @RestController
 @RequiredArgsConstructor
@@ -62,5 +66,12 @@ public class PostController {
     @GetMapping("/posts/search")
     public ResponseEntity<?> search(Pageable pageable, PostSearchCondition postSearchCondition) {
         return ResponseEntity.ok(postService.searchWithConditions(postSearchCondition, pageable));
+    }
+
+    @GetMapping("/images/{path}")
+    public Resource showImage(@PathVariable(name = "path") String path) throws MalformedURLException {
+        log.info("-------------------------------------------------");
+        log.info("{}", path);
+        return new UrlResource("file:C:\\Users\\Administrator\\Desktop\\tmp\\" + path);
     }
 }
