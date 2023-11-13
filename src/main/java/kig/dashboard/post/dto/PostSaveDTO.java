@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @Data
 @Builder
 @AllArgsConstructor @NoArgsConstructor
+@Slf4j
 public class PostSaveDTO {
 
 
@@ -26,10 +28,10 @@ public class PostSaveDTO {
 //    @NotBlank(message = "카테고리를 선택해주세요")
 //    private Category category;
 
-    @Builder.Default
-    private Optional<MultipartFile> uploadFile = Optional.empty();
-
     public Post toEntity() {
-        return Post.builder().title(title).content(content).build();
+        Post post = Post.builder().title(title).content(content)
+                .build();
+
+        return post;
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -35,9 +36,12 @@ public class PostController {
 
     @PostMapping("/posts")
     @ResponseStatus(HttpStatus.CREATED)
-    public void savePost(@Valid @RequestBody PostSaveDTO postSaveDTO) throws MemberException {
+    public void savePost(@Valid @RequestPart(value = "post") PostSaveDTO postSaveDTO,
+                         @RequestPart(value="file", required = false) MultipartFile multipartFile) throws MemberException {
+
         log.info("savePost: {}", postSaveDTO.toString());
-        postService.save(postSaveDTO);
+        log.info("file: {}", multipartFile);
+        postService.save(postSaveDTO, multipartFile);
     }
 
     @PutMapping("/posts/{postId}")

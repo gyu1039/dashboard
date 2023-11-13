@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class PostInfoDTO {
 
     private Long postId;
-    private Category category;
+//    private Category category;
     private String title;
     private String content;
     private String filePath;
@@ -29,8 +29,8 @@ public class PostInfoDTO {
 
     public PostInfoDTO(Post post) {
 
-        this.postId = post.getId();
 //        this.category = post.getCategory();
+        this.postId = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.filePath = post.getFilePath();

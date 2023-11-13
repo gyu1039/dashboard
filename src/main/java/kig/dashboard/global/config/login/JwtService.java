@@ -78,6 +78,7 @@ public class JwtService {
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setHeader("refresh", refreshToken);
+
 //        ResponseCookie cookie = ResponseCookie.from("refresh", refreshToken)
 //                .maxAge(refreshTokenExpirationTime)
 //                .path("/")

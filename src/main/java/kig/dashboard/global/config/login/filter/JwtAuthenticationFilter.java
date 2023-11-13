@@ -37,11 +37,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
 
-        if(request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)) {
-            log.info("{}", "Authentication Content-Type not supported");
-            throw new AuthenticationServiceException("Authentication Content-Type not supported: " + request.getContentType());
-        }
-
         ObjectMapper objectMapper = new ObjectMapper();
         String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
         MemberLoginDTO member = objectMapper.readValue(messageBody, MemberLoginDTO.class);

@@ -20,13 +20,17 @@ public class FileService {
 
         String filePath = fileDir + UUID.randomUUID();
 
+        String originalName = multipartFile.getOriginalFilename();
+        String fileExtension = originalName.substring(originalName.lastIndexOf(".") + 1);
+        String ret = filePath + "." + fileExtension;
+
         try {
-            multipartFile.transferTo(new File(filePath));
+            multipartFile.transferTo(new File(ret));
         } catch (IOException e) {
             throw new FileException(FileExceptionType.FILE_CAN_NOT_SAVE);
         }
 
-        return filePath;
+        return ret;
     }
 
     public void delete(String filePath) {

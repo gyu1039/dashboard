@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 
@@ -43,7 +44,7 @@ public class PostService {
     }
 
     @Transactional
-    public void save(PostSaveDTO postSaveDTO) throws MemberException {
+    public void save(PostSaveDTO postSaveDTO, MultipartFile multipartFile) throws MemberException {
 
 
         Post post = postSaveDTO.toEntity();
@@ -52,10 +53,9 @@ public class PostService {
                 .orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER)));
 
 
-        postSaveDTO.getUploadFile().ifPresent(
-                file -> post.updateFilePath(fileService.save(file))
-        );
-
+        if(multipartFile != null) {
+            post.updateFilePath(fileService.save(multipartFile));
+        }
 
         postRepository.save(post);
     }
