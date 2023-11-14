@@ -1,5 +1,7 @@
 package kig.dashboard.post;
 
+import kig.dashboard.member.MemberRole;
+import kig.dashboard.member.entity.Member;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.exception.MemberException;
 import kig.dashboard.member.exception.MemberExceptionType;
@@ -101,6 +103,12 @@ public class PostService {
     }
 
     public void checkAuthority(Post post, PostExceptionType postExceptionType) throws RuntimeException {
+
+        String loginUsername = SecurityUtil.getLoginUsername();
+        Member member = memberRepository.findByUsername(loginUsername).get();
+        if (member.getRole().name().equals(MemberRole.ADMIN.name())) {
+            return;
+        }
 
         if(!post.getWriter().getUsername().equals(SecurityUtil.getLoginUsername())) {
             throw new PostException(postExceptionType);
