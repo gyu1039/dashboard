@@ -6,7 +6,6 @@ import kig.dashboard.post.dto.PostSaveDTO;
 import kig.dashboard.post.dto.PostUpdateDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -30,6 +29,9 @@ public class PostController {
 
     @Value("${spring.data.web.pageable.default-page-size}")
     private int size;
+
+    @Value("${file.dir}")
+    private String filePath;
 
     @GetMapping("/posts")
     public ResponseEntity<?> postList(@RequestParam(defaultValue = "0", name = "page") int page) {
@@ -70,8 +72,7 @@ public class PostController {
 
     @GetMapping("/images/{path}")
     public Resource showImage(@PathVariable(name = "path") String path) throws MalformedURLException {
-        log.info("-------------------------------------------------");
         log.info("{}", path);
-        return new UrlResource("file:C:\\Users\\Administrator\\Desktop\\tmp\\" + path);
+        return new UrlResource("file:"+ filePath + path);
     }
 }

@@ -116,4 +116,9 @@ public class PostService {
     public PostPagingDTO searchWithConditions(PostSearchCondition postSearchCondition, Pageable pageable) {
         return new PostPagingDTO(postRepository.search(postSearchCondition, pageable));
     }
+
+    @Transactional
+    public void save(PostSaveDTO postSaveDTO) {
+        save(postSaveDTO, null);
+    }
 }
