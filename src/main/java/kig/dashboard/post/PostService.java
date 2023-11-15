@@ -22,6 +22,7 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,7 +64,7 @@ public class PostService {
     }
 
     @Transactional
-    public void update(Long id, PostUpdateDTO postUpdateDTO) {
+    public void update(Long id, PostUpdateDTO postUpdateDTO, MultipartFile multipartFile) {
 
         log.info("{}", postUpdateDTO);
         Post post = postRepository.findById(id).orElseThrow(
@@ -72,17 +73,19 @@ public class PostService {
 
         checkAuthority(post, PostExceptionType.NOT_AUTHORITY_UPDATE_POST);
 
-        postUpdateDTO.getTitle().ifPresent(post::updateTitle);
-        postUpdateDTO.getContent().ifPresent(post::updateContent);
-
-        if(post.getFilePath() != null) {
-            fileService.delete(post.getFilePath());
+        if(postUpdateDTO.getTitle() != null) {
+            post.updateTitle(postUpdateDTO.getTitle());
         }
 
-        postUpdateDTO.getUploadFile().ifPresentOrElse(
-                multipartFile -> post.updateFilePath(fileService.save(multipartFile)),
-                () -> post.updateFilePath(null)
-        );
+        if(postUpdateDTO.getContent() != null) {
+            post.updateContent(postUpdateDTO.getContent());
+        }
+
+        if(multipartFile != null) {
+            post.updateFilePath(fileService.save(multipartFile));
+        } else {
+            post.updateFilePath(null);
+        }
 
     }
 

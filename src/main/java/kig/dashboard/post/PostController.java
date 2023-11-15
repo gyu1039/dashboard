@@ -51,8 +51,9 @@ public class PostController {
     }
 
     @PutMapping("/posts/{postId}")
-    public void updatePost(@PathVariable Long postId, @RequestBody PostUpdateDTO postUpdateDTO) {
-        postService.update(postId, postUpdateDTO);
+    public void updatePost(@PathVariable Long postId, @Valid @RequestPart(value = "post") PostUpdateDTO postUpdateDTO,
+                           @RequestPart(value="file", required = false) MultipartFile multipartFile) {
+        postService.update(postId, postUpdateDTO, multipartFile);
     }
 
     @DeleteMapping("/posts/{postId}")
