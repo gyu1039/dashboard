@@ -37,7 +37,7 @@ public class MemberSignUpDTO {
         return Member.builder()
                 .username(this.username)
                 .password(this.password)
-                .role(MemberRole.valueOf(role))
+                .role(MemberRole.valueOf(this.role))
                 .nickname(this.nickname).build();
     }
 

@@ -6,6 +6,7 @@ import kig.dashboard.comment.dto.CommentSaveDTO;
 import kig.dashboard.comment.exception.CommentException;
 import kig.dashboard.comment.exception.CommentExceptionType;
 import kig.dashboard.global.config.login.JwtService;
+import kig.dashboard.member.MemberRole;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.MemberService;
 import kig.dashboard.member.entity.Member;
@@ -24,6 +25,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -83,12 +85,14 @@ class CommentControllerTest {
                 .password("1234")
                 .nickname("test1").build());
         SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
+        UserDetails build = User.builder()
+                .username(USERNAME)
+                .password("1234")
+                .roles(MemberRole.USER.name())
+                .build();
         emptyContext.setAuthentication(
                 new UsernamePasswordAuthenticationToken(
-                        User.builder()
-                                .username(USERNAME)
-                                .password("1234")
-                                .build(), null)
+                        build, build.getAuthorities())
         );
 
         SecurityContextHolder.setContext(emptyContext);
@@ -111,7 +115,7 @@ class CommentControllerTest {
     private Long savePost() {
         String title = "제목";
         String content = "내용";
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.empty());
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content);
 
         Post save = postRepository.save(postSaveDTO.toEntity());
         clear();

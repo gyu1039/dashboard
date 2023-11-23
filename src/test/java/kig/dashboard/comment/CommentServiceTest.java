@@ -70,7 +70,7 @@ class CommentServiceTest {
         String title = "제목";
         String content = "내용";
 
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.empty());
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content);
         Post save = postRepository.save(postSaveDTO.toEntity());
         clear();
 

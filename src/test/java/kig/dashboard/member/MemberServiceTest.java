@@ -43,7 +43,7 @@ class MemberServiceTest {
 
     private MemberSignUpDTO setMember() throws Exception {
 
-        MemberSignUpDTO memberSignUpDTO = new MemberSignUpDTO(EMAIL, PASSWORD, NICKNAME);
+        MemberSignUpDTO memberSignUpDTO = new MemberSignUpDTO(EMAIL, PASSWORD, NICKNAME, MemberRole.USER.name());
         memberService.signUp(memberSignUpDTO);
 
         SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();

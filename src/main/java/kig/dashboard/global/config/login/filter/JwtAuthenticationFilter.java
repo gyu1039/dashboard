@@ -41,8 +41,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
         String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
         MemberLoginDTO member = objectMapper.readValue(messageBody, MemberLoginDTO.class);
 
-        log.info("{}", member);
-
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(member.getUsername(), member.getPassword());
 

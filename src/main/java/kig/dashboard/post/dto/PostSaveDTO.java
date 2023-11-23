@@ -25,9 +25,6 @@ public class PostSaveDTO {
     @NotBlank(message = "내용을 입력해주세요")
     private String content;
 
-    public <T> PostSaveDTO(String title, String content, Optional<T> empty) {
-
-    }
 
 //    @NotBlank(message = "카테고리를 선택해주세요")
 //    private Category category;

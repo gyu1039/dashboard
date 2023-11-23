@@ -19,8 +19,8 @@ class FileServiceTest {
     FileService fileService;
 
     private MockMultipartFile getMockUploadFile() throws IOException {
-        return new MockMultipartFile("goo", "goo.png", "image/png",
-                new FileInputStream("C:\\Users\\Administrator\\Desktop\\tmp\\goo.png"));
+        return new MockMultipartFile("test", "test.jpg", "image/jpg",
+                new FileInputStream("C:\\Users\\Administrator\\Desktop\\tmp\\test.jpg"));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package kig.dashboard.post;
 
+import kig.dashboard.member.MemberRole;
 import kig.dashboard.member.repository.MemberRepository;
 import kig.dashboard.member.MemberService;
 import kig.dashboard.member.dto.MemberSignUpDTO;
@@ -17,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -71,12 +73,14 @@ class PostServiceTest {
 
         memberService.signUp(new MemberSignUpDTO(USERNAME, PASSWORD, "test"));
         SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
+        UserDetails build = User.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .roles(MemberRole.USER.name())
+                .build();
         emptyContext.setAuthentication(
                 new UsernamePasswordAuthenticationToken(
-                        User.builder()
-                                .username(USERNAME)
-                                .password(PASSWORD)
-                                .build(), null)
+                        build, build.getAuthorities())
                 );
         SecurityContextHolder.setContext(emptyContext);
         clear();
@@ -87,7 +91,7 @@ class PostServiceTest {
 
         String title = "제목";
         String content = "내용";
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.empty());
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content);
 
         postService.save(postSaveDTO);
         clear();
@@ -104,9 +108,9 @@ class PostServiceTest {
 
         String title = "제목";
         String content = "내용";
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.ofNullable(getMockUploadFile()));
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content);
 
-        postService.save(postSaveDTO);
+        postService.save(postSaveDTO, getMockUploadFile());
         clear();
 
         Post findPost = em.createQuery("select p from Post p", Post.class).getSingleResult();
@@ -124,8 +128,8 @@ class PostServiceTest {
         String title = "제목";
         String content = "내용";
 
-        PostSaveDTO postSaveDTO = new PostSaveDTO(null, content, Optional.empty());
-        PostSaveDTO postSaveDTO2 = new PostSaveDTO(title, null, Optional.empty());
+        PostSaveDTO postSaveDTO = new PostSaveDTO(null, content);
+        PostSaveDTO postSaveDTO2 = new PostSaveDTO(title, null);
 
         assertThrows(Exception.class, () -> {
            postService.save(postSaveDTO);
@@ -138,13 +142,13 @@ class PostServiceTest {
 
         String title = "제목";
         String content = "내용";
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.empty());
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content);
         postService.save(postSaveDTO);
         clear();
 
         Post findPost = em.createQuery("select p from Post p", Post.class).getSingleResult();
-        PostUpdateDTO postUpdateDTO = new PostUpdateDTO(Optional.ofNullable("바꾼제목"), Optional.ofNullable("바꾼 내용"), Optional.empty());
-        postService.update(findPost.getId(), postUpdateDTO);
+        PostUpdateDTO postUpdateDTO = new PostUpdateDTO("바꾼제목", "바꾼 내용");
+        postService.update(findPost.getId(), postUpdateDTO, null);
         clear();
 
         Post post = postRepository.findById(findPost.getId()).get();
@@ -158,14 +162,14 @@ class PostServiceTest {
 
         String title = "제목";
         String content = "내용";
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.empty());
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content);
         postService.save(postSaveDTO);
         clear();
 
         Post findPost = postRepository.findAll().get(0);
         PostUpdateDTO postUpdateDTO
-                = new PostUpdateDTO(Optional.ofNullable("바꾼 제목"), Optional.ofNullable("바꾼 내용"), Optional.ofNullable(getMockUploadFile()));
-        postService.update(findPost.getId(), postUpdateDTO);
+                = new PostUpdateDTO("바꾼 제목", "바꾼 내용");
+        postService.update(findPost.getId(), postUpdateDTO, getMockUploadFile());
         clear();
 
         Post post = em.find(Post.class, findPost.getId());
@@ -182,16 +186,16 @@ class PostServiceTest {
 
         String title = "제목";
         String content = "내용";
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.ofNullable(getMockUploadFile()));
-        postService.save(postSaveDTO);
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content);
+        postService.save(postSaveDTO, getMockUploadFile());
         clear();
 
         Post findPost = em.createQuery("select p from Post p", Post.class).getSingleResult();
         assertThat(findPost.getFilePath()).isNotNull();
         clear();
 
-        PostUpdateDTO postUpdateDTO = new PostUpdateDTO(Optional.ofNullable("updated title"), Optional.ofNullable("updated content"), Optional.empty());
-        postService.update(findPost.getId(), postUpdateDTO);
+        PostUpdateDTO postUpdateDTO = new PostUpdateDTO("updated title", "updated content");
+        postService.update(findPost.getId(), postUpdateDTO, null);
         clear();
 
         Post post = em.find(Post.class, findPost.getId());
@@ -206,8 +210,8 @@ class PostServiceTest {
 
         String title = "제목";
         String content = "내용";
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.ofNullable(getMockUploadFile()));
-        postService.save(postSaveDTO);
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content);
+        postService.save(postSaveDTO, getMockUploadFile());
         clear();
 
         Post findPost = em.createQuery("select p from Post p", Post.class).getSingleResult();
@@ -217,12 +221,11 @@ class PostServiceTest {
 
 
         PostUpdateDTO postUpdateDTO
-                = new PostUpdateDTO(Optional.ofNullable("updated title"),
-                                    Optional.ofNullable("updated content"),
-                                    Optional.of(new MockMultipartFile("image", "image.png", "image/png",
-                                            new FileInputStream("C:\\Users\\Administrator\\Desktop\\tmp\\image.png"))));
+                = new PostUpdateDTO("updated title",
+                                    "updated content");
 
-        postService.update(findPost.getId(), postUpdateDTO);
+        postService.update(findPost.getId(), postUpdateDTO, new MockMultipartFile("image", "image.png", "image/png",
+                new FileInputStream("C:\\Users\\Administrator\\Desktop\\tmp\\image.png")));
         clear();
 
         Post post1 = em.find(Post.class, findPost.getId());
@@ -253,23 +256,23 @@ class PostServiceTest {
 
         String title = "제목";
         String content = "내용";
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.ofNullable(getMockUploadFile()));
-        postService.save(postSaveDTO);
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content);
+        postService.save(postSaveDTO, getMockUploadFile());
         clear();
 
         setAnotherAuthentication();
 
         Post findPost = em.createQuery("select p from Post p", Post.class).getSingleResult();
-        PostUpdateDTO postUpdateDTO = new PostUpdateDTO(Optional.of("제목1"), Optional.of("내용1"), Optional.empty());
+        PostUpdateDTO postUpdateDTO = new PostUpdateDTO("제목1", "내용1");
 
-        assertThrows(PostException.class, () -> postService.update(findPost.getId(), postUpdateDTO));
+        assertThrows(PostException.class, () -> postService.update(findPost.getId(), postUpdateDTO, null));
     }
 
     @Test
     public void 게시글삭제_성공() throws Exception {
         String title = "제목";
         String content = "내용";
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.empty());
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content);
         postService.save(postSaveDTO);
         clear();
 
@@ -285,7 +288,7 @@ class PostServiceTest {
 
         String title = "제목";
         String content = "내용";
-        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content, Optional.empty());
+        PostSaveDTO postSaveDTO = new PostSaveDTO(title, content);
         postService.save(postSaveDTO);
         clear();
 
