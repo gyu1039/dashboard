@@ -1,0 +1,14 @@
+.errorMessageWrap {
+  margin-top: 8px;
+  color: #ef0000;
+  font-size: 12px;
+}
+
+.checkbutton {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.checknickname {
+  margin-bottom: 10px;
+}

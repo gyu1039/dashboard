@@ -72,8 +72,6 @@ class CommentControllerTest {
     @Autowired
     JwtService jwtService;
 
-    ObjectMapper objectMapper = new ObjectMapper();
-
     final String USERNAME = "username";
 
     private static Member member;
